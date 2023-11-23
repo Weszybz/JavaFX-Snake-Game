@@ -8,23 +8,37 @@ import java.awt.event.KeyEvent;
 
 /**
  * 
- * @Project Snakee
- * @Description Spilaðu leikinn
- * @Author Sigurður Sigurðardóttir
- * @version Ekki viss
- */ 
+ * @Project Snake
+ * @Description Play the game
+ * @Author Wesley Agbons
+ * @version Not sure
+ */
 
+
+/**
+ * The Play class represents the main game class
+ * It extends from MyFrame
+ * It contains the game logic, rendering, and user input handling.
+ */
 public class Play extends MyFrame
 {
-
+	/** A unique serial identification number*/
 	private static final long serialVersionUID = -3641221053272056036L;
-
+/** The snake object representing the player. */
 	public MySnake mySnake = new MySnake(100, 100);// x , y
+	/** The food object that the snake can eat */
 	public Food food = new Food();
 
+	/** The background image for the game. */
 	public Image background = ImageUtil.images.get("UI-background");
+	/** The image displayed when the game is over */
 	public Image fail = ImageUtil.images.get("game-scene-01");
 
+	/**
+	 * Override the keyPressed method to handle keyboard input.
+	 *
+	 * @param e The KeyEvent object representing the key press.
+	 */
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
@@ -32,31 +46,45 @@ public class Play extends MyFrame
 		mySnake.keyPressed(e);
 	}
 
+	/**
+	 * Overrides the paint method to render game elements on the screen.
+	 *
+	 * @param g The Graphics object used for drawing.
+	 */
 	@Override
 	public void paint(Graphics g)
 	{
 		super.paint(g);
 		g.drawImage(background, 0, 0, null);
 
-		// Ákveða stöðu leiksins.
+		// Determine the state of the game
 		if (mySnake.l)
 		{
+			// Draw the snake
 			mySnake.draw(g);
 			if (food.l)
 			{
+				// Draw and check for the eaten food
 				food.draw(g);
 				food.eaten(mySnake);
 			} else
 			{
+				// If no food, create a new one
 				food = new Food();
 			}
 		} else
 		{
+			// If the snake is not alive, show the failure image
 			g.drawImage(fail, 0, 0, null);
 		}
+		// Draw the score on the screen
 		drawScore(g);
 	}
-
+	/**
+	 * Draw the current score on the screen.
+	 *
+	 * @param g The Graphics object used for drawing.
+	 */
 	public void drawScore(Graphics g)
 	{
 		g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
@@ -64,9 +92,16 @@ public class Play extends MyFrame
 		g.drawString("SCORE : " + mySnake.score, 20, 40);
 	}
 
+	/**
+	 * The main method to the start the game. Creates an instance of the Play class and loads the frame.
+	 *
+	 * @param args The command-line arguments (unused).
+	 */
 	public static void main(String[] args)
 	{
+		// Create an instance of the Play class and load the frame
 		new Play().loadFrame();
+		//Start playing background music
 		MusicPlayer.getMusicPlay("src/example/frogger.mp3");
 
 	}
