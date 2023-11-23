@@ -13,38 +13,44 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
- * 
- * @Project Snakee
- * @Description Hladdu leikinn og endurnýjaðu hann stöðugt
- * @Author Sigurður Sigurðardóttir
- * @version Ekki viss
- */ 
+ * @Project Snake
+ * @Description Play the game
+ * @Author Wesley Agbons
+ * @version Not sure
 
-
+ * The MyFrame class represents the main frame of the Snake game.
+ * It extends JPanel and implements KeyListener for user inputs.
+ */
 public class MyFrame extends JPanel implements KeyListener
 {
+	/** A unique serial identification number*/
 	private static final long serialVersionUID = -3149926831770554380L;
 
+	/** The JFrame used to display the game. */
 	public JFrame jFrame = new JFrame();
 
+	/** Constructs a new MyFrame and sets the application icon. */
 	public MyFrame()
 	{
 		jFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(MyFrame.class.getResource("snake-logo.png")));
 	}
 
+	/**
+	 * Loads the game frame
+	 * Sets properties
+	 * Starts the game loop
+	 */
 	public void loadFrame()
 	{
-		/*
-		 * Komið í veg fyrir að myndin blikki.
-		 */
+		/** Prevent the game from flashing or buffering */
 		this.setDoubleBuffered(true);
 		jFrame.add(this);
 		jFrame.addKeyListener(this);
 
-		jFrame.setTitle("Snakee Yipee");
+		jFrame.setTitle("Snake Game");
 		jFrame.setSize(870, 560);
 		jFrame.setLocationRelativeTo(null);
-		jFrame.addWindowListener(new WindowAdapter()// loka
+		jFrame.addWindowListener(new WindowAdapter()// Closing
 		{
 			@Override
 			public void windowClosing(WindowEvent e)
@@ -57,6 +63,8 @@ public class MyFrame extends JPanel implements KeyListener
 
 		new MyThread().start();
 	}
+
+	/** The MyThread class represents a thread responsible for repainting the game at regular intervals */
 	class MyThread extends Thread
 	{
 		@Override
@@ -98,21 +106,34 @@ public class MyFrame extends JPanel implements KeyListener
 
 	}
 
+	/**
+	 * the MySnake class represents the player-controlled snake in the game.
+	 * It implements the movable interface and extends the SnakeObject class.
+	 */
 	public static class MySnake extends SnakeObject implements movable
 	{
-		// Leikjabreytan.
+		// Game variables
 		private int speed_XY;
 		private int length;
 		private int num; // ?
 		public int score = 0;
 
+		// Static images for the snake head and body
 		private static final BufferedImage IMG_SNAKE_HEAD = (BufferedImage) ImageUtil.images.get("snake-head-right");
 
+		// List which stores the body point of the snake
 		public static List<Point> bodyPoints = new LinkedList<>();
 
+		// Image for the rotated snake head
 		private static BufferedImage newImgSnakeHead;
 		boolean up, down, left, right = true;
 
+		/**
+		 * Constructs a new MySnake object with the specified initial position.
+		 *
+		 * @param x The initial x-coordinate.
+		 * @param y The initial y-coordinate.
+		 */
 		public MySnake(int x, int y)
 		{
 			this.l = true;
@@ -133,19 +154,34 @@ public class MyFrame extends JPanel implements KeyListener
 
 		}
 
+		/**
+		 * Retrieves the current length of the snake.
+		 *
+		 * @return the length of thr snake.
+		 */
 		public int getLength()
 		{
 			return length;
 		}
 
+		/**
+		 * Changes the length of the snake.
+		 *
+		 * @param length The new length of the snake.
+		 */
 		public void changeLength(int length)
 		{
 			this.length = length;
 		}
 
+		/**
+		 * Handles key presses to change tge direct of the snake.
+		 *
+		 * @param e The KeyEvent object representing the key press.
+		 */
 		public void keyPressed(KeyEvent e)
 		{
-			// athugaðu lykilinn
+			// Check the key
 			switch (e.getKeyCode())
 			{
 			case KeyEvent.VK_UP:
@@ -204,7 +240,7 @@ public class MyFrame extends JPanel implements KeyListener
 
 		public void move()
 		{
-			// láta kvikindið hreyfa sig
+			// Let the snake move right
 			if (up)
 			{
 				y -= speed_XY;
