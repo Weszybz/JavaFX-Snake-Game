@@ -21,7 +21,7 @@ import javax.swing.JPanel;
  * The MyFrame class represents the main frame of the Snake game.
  * It extends JPanel and implements KeyListener for user inputs.
  */
-public class MyFrame extends JPanel implements KeyListener
+public class GameFrame extends JPanel implements KeyListener
 {
 	/** A unique serial identification number*/
 	private static final long serialVersionUID = -3149926831770554380L;
@@ -30,9 +30,9 @@ public class MyFrame extends JPanel implements KeyListener
 	public JFrame jFrame = new JFrame();
 
 	/** Constructs a new MyFrame and sets the application icon. */
-	public MyFrame()
+	public GameFrame()
 	{
-		jFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(MyFrame.class.getResource("snake-logo.png")));
+		jFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("snake-logo.png")));
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class MyFrame extends JPanel implements KeyListener
 	 * the MySnake class represents the player-controlled snake in the game.
 	 * It implements the movable interface and extends the SnakeObject class.
 	 */
-	public static class MySnake extends SnakeObject implements movable
+	public static class SnakeGame extends SnakeObject implements movable
 	{
 		// Game variables
 		private int speed_XY;
@@ -134,14 +134,14 @@ public class MyFrame extends JPanel implements KeyListener
 		 * @param x The initial x-coordinate.
 		 * @param y The initial y-coordinate.
 		 */
-		public MySnake(int x, int y)
+		public SnakeGame(int x, int y)
 		{
-			this.l = true;
+			this.isAvailable = true;
 			this.x = x;
 			this.y = y;
-			this.i = ImageUtil.images.get("snake-body");
-			this.w = i.getWidth(null);
-			this.h = i.getHeight(null);
+			this.image = ImageUtil.images.get("snake-body");
+			this.width = image.getWidth(null);
+			this.height = image.getHeight(null);
 
 			this.speed_XY = 5;
 			this.length = 1;
@@ -149,7 +149,7 @@ public class MyFrame extends JPanel implements KeyListener
 			/*
 			 * Attention : ?
 			 */
-			this.num = w / speed_XY;
+			this.num = width / speed_XY;
 			newImgSnakeHead = IMG_SNAKE_HEAD;
 
 		}
@@ -283,7 +283,7 @@ public class MyFrame extends JPanel implements KeyListener
 				{
 					if (point.equals(point2) && point != point2)
 					{
-						this.l = false;
+						this.isAvailable = false;
 					}
 				}
 			}
@@ -296,17 +296,17 @@ public class MyFrame extends JPanel implements KeyListener
 			for (int i = length; i >= num; i -= num)
 			{
 				Point point = bodyPoints.get(i);
-				g.drawImage(this.i, point.x, point.y, null);
+				g.drawImage(this.image, point.x, point.y, null);
 			}
 		}
 
 		private void outofBounds()
 		{
-			boolean xOut = (x <= 0 || x >= (870 - w));
-			boolean yOut = (y <= 40 || y >= (560 - h));
+			boolean xOut = (x <= 0 || x >= (870 - width));
+			boolean yOut = (y <= 40 || y >= (560 - height));
 			if (xOut || yOut)
 			{
-				l = false;
+				isAvailable = false;
 			}
 		}
 	}
@@ -315,18 +315,18 @@ public class MyFrame extends JPanel implements KeyListener
 	{
 		int x;
 		int y;
-		Image i;
-		int w;
-		int h;
+		Image image;
+		int width;
+		int height;
 
-		public boolean l;
+		public boolean isAvailable;
 
 
 		public abstract void draw(Graphics g);
 
 		public Rectangle getRectangle()
 		{
-			return new Rectangle(x, y, w, h);
+			return new Rectangle(x, y, width, height);
 		}
 	}
 }
