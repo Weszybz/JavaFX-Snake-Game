@@ -4,16 +4,23 @@ import java.awt.Image;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The ImageUtil class provides a utility for managing and retrieving images used in the game.
+ */
 public class ImageUtil
 {
+	/** A map to store images with corresponding names. */
 	public static Map<String, Image> images = new HashMap<>();
 
 	static
 	{
-		// snake
+		// Initialize the map with various images used in the game.
+
+		// Snake images
 		images.put("snake-head-right", GameUtil.getImage("example/snake-head-right.png"));
 		images.put("snake-body", GameUtil.getImage("example/snake-body.png"));
-		// obstacles
+
+		// Obstacles images
 		images.put("0", GameUtil.getImage("example/food-kiwi.png"));
 		images.put("1", GameUtil.getImage("example/food-lemon.png"));
 		images.put("2", GameUtil.getImage("example/food-litchi.png"));
@@ -31,6 +38,7 @@ public class ImageUtil
 		images.put("14", GameUtil.getImage("example/food-pineapple.png"));
 		images.put("15", GameUtil.getImage("example/food-strawberry.png"));
 		images.put("16", GameUtil.getImage("example/food-watermelon.png"));
+		// User interface and scene background images
 		images.put("UI-background", GameUtil.getImage("example/UI-background.png"));
 		images.put("game-scene-01", GameUtil.getImage("example/game-scene-01.jpg"));
 	}
