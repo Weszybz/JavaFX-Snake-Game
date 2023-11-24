@@ -20,19 +20,19 @@ import java.awt.event.KeyEvent;
  * It extends from MyFrame
  * It contains the game logic, rendering, and user input handling.
  */
-public class Play extends MyFrame
+public class GameScreen extends GameFrame
 {
 	/** A unique serial identification number*/
 	private static final long serialVersionUID = -3641221053272056036L;
 /** The snake object representing the player. */
-	public MySnake mySnake = new MySnake(100, 100);// x , y
+	public SnakeGame snakeGame = new SnakeGame(100, 100);// x , y
 	/** The food object that the snake can eat */
 	public Food food = new Food();
 
 	/** The background image for the game. */
 	public Image background = ImageUtil.images.get("UI-background");
 	/** The image displayed when the game is over */
-	public Image fail = ImageUtil.images.get("game-scene-01");
+	public Image failImage = ImageUtil.images.get("game-scene-01");
 
 	/**
 	 * Override the keyPressed method to handle keyboard input.
@@ -43,7 +43,7 @@ public class Play extends MyFrame
 	public void keyPressed(KeyEvent e)
 	{
 		super.keyPressed(e);
-		mySnake.keyPressed(e);
+		snakeGame.keyPressed(e);
 	}
 
 	/**
@@ -58,15 +58,15 @@ public class Play extends MyFrame
 		g.drawImage(background, 0, 0, null);
 
 		// Determine the state of the game
-		if (mySnake.l)
+		if (snakeGame.isAvailable)
 		{
 			// Draw the snake
-			mySnake.draw(g);
-			if (food.l)
+			snakeGame.draw(g);
+			if (food.isAvailable)
 			{
 				// Draw and check for the eaten food
 				food.draw(g);
-				food.eaten(mySnake);
+				food.eaten(snakeGame);
 			} else
 			{
 				// If no food, create a new one
@@ -75,7 +75,7 @@ public class Play extends MyFrame
 		} else
 		{
 			// If the snake is not alive, show the failure image
-			g.drawImage(fail, 0, 0, null);
+			g.drawImage(failImage, 0, 0, null);
 		}
 		// Draw the score on the screen
 		drawScore(g);
@@ -89,7 +89,7 @@ public class Play extends MyFrame
 	{
 		g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
 		g.setColor(Color.MAGENTA);
-		g.drawString("SCORE : " + mySnake.score, 20, 40);
+		g.drawString("SCORE : " + snakeGame.score, 20, 40);
 	}
 
 	/**
@@ -100,27 +100,9 @@ public class Play extends MyFrame
 	public static void main(String[] args)
 	{
 		// Create an instance of the Play class and load the frame
-		new Play().loadFrame();
+		new GameScreen().loadFrame();
 		//Start playing background music
 		MusicPlayer.getMusicPlay("src/example/frogger.mp3");
 
 	}
-/*	
-	public static void main(String[] args)
-	{
-		JFrame frame = new JFrame();
-		// frame.setSize(400,600);
-		frame.setBounds(450, 200, 920, 600);
-		// frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		SnakePanel panel = new SnakePanel();
-		frame.add(panel);
-
-		frame.setVisible(true);
-
-		// Play the background music.
-		MusicPlayer.getMusicPlay("resource\\music\\background.mp3");
-	} 
-*/
 }

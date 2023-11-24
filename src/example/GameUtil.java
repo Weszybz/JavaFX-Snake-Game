@@ -21,18 +21,18 @@ public class GameUtil
 	 */
 	public static Image getImage(String imagePath)
 	{
-		URL u = GameUtil.class.getClassLoader().getResource(imagePath);
-		BufferedImage i = null;
+		URL url = GameUtil.class.getClassLoader().getResource(imagePath);
+		BufferedImage image = null;
 		try
 		{
-			i = ImageIO.read(u);
+			image = ImageIO.read(url);
 		} catch (Exception e)
 		{
 			System.err.println("\n" + "ERROR : SPECIFIC IMAGE NOT FOUND !\n");
 			e.printStackTrace();
 		}
 
-		return i;
+		return image;
 	}
 
 	/**
@@ -44,22 +44,22 @@ public class GameUtil
 	 */
 	public static Image rotateImage(final BufferedImage bufferedImage, final int degree)
 	{
-	int w = bufferedImage.getWidth();
-	int h = bufferedImage.getHeight();
-	int t = bufferedImage.getColorModel().getTransparency();
+	int width = bufferedImage.getWidth();
+	int height = bufferedImage.getHeight();
+	int transparency = bufferedImage.getColorModel().getTransparency();
 
-	BufferedImage i;
+	BufferedImage image;
 	Graphics2D graphics2d;
 
 	// Create a new BufferedImage for the rotated image
-	(graphics2d = (i = new BufferedImage(w, h, t)).createGraphics()).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+	(graphics2d = (image = new BufferedImage(width, height, transparency)).createGraphics()).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
 	// Rotate the image
-	graphics2d.rotate(Math.toRadians(degree), w / 2, h / 2);
+	graphics2d.rotate(Math.toRadians(degree), width / 2, height / 2);
 	graphics2d.drawImage(bufferedImage, 0, 0, null);
 	graphics2d.dispose();
 
-	return i;
+	return image;
 
 	}
 }
