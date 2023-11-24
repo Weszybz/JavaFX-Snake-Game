@@ -13,7 +13,7 @@ public class Paddle {
     public static final Color INNER_COLOR = Color.GREEN;
 
     /** The default movement amount of the paddle */
-    public static final int DEF_MOVE_AMOUNT = 5;
+    public static final int DEFAULT_MOVE_AMOUNT = 5;
 
     /** The rectangle representing the face of the paddle. */
     private Rectangle paddleFace;
@@ -50,7 +50,7 @@ public class Paddle {
      * @param height the height of the rectangle.
      * @return A rectangle based on the specified parameters.
      */
-    public Rectangle makeRectangle(int width,int height){
+    private Rectangle makeRectangle(int width,int height){
         Point p = new Point((int)(ballPoint.getX() - (width / 2)),(int)ballPoint.getY());
         return  new Rectangle(p,new Dimension(width,height));
     }
@@ -66,12 +66,12 @@ public class Paddle {
 
     /** Starts left movement of the paddle */
     public void moveLeft(){
-        moveAmount = -DEF_MOVE_AMOUNT;
+        moveAmount = -DEFAULT_MOVE_AMOUNT;
     }
 
     /** Starts right movement of the paddle */
-    public void movRight(){
-        moveAmount = DEF_MOVE_AMOUNT;
+    public void moveRight(){
+        moveAmount = DEFAULT_MOVE_AMOUNT;
     }
 
     /** Stops the movement of the paddle. */
