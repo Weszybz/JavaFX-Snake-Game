@@ -60,7 +60,6 @@ public class GameFrame extends JPanel implements KeyListener
 			}
 		});
 		jFrame.setVisible(true);
-
 		new GameThread().start();
 	}
 
