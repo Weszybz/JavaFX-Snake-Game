@@ -61,11 +61,11 @@ public class GameFrame extends JPanel implements KeyListener
 		});
 		jFrame.setVisible(true);
 
-		new MyThread().start();
+		new GameThread().start();
 	}
 
 	/** The MyThread class represents a thread responsible for repainting the game at regular intervals */
-	class MyThread extends Thread
+	class GameThread extends Thread
 	{
 		@Override
 		public void run()
@@ -89,21 +89,18 @@ public class GameFrame extends JPanel implements KeyListener
 	public void keyTyped(KeyEvent e)
 	{
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
 		// TODO Auto-generated method stub
-
 	}
 
 	/**
