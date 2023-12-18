@@ -19,7 +19,7 @@ public class Snake {
      * Starts the snake's movement in the specified direction.
      *
      * @param x The direction of the movement. Positive for right, Negative for left and Zero for no movement.
-     * @return The current movement state of the snake.
+     * @return The current movement state of thåe snake.
      */
     public static int move(int x) {
         moving = x;
