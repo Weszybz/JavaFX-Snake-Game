@@ -29,13 +29,25 @@ public class MainMenu extends GameFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.setUndecorated(true); // Optional: for fullscreen
 
+        // Snake Game Title
+        JLabel titleLabel = new JLabel("Snake Game");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 64));
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        titleLabel.setForeground(Color.MAGENTA);
 
         // Name input field
         nameField = new JTextField(20);
-        JPanel inputPanel = new JPanel(new GridBagLayout());
+        JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         inputPanel.setOpaque(false);
         inputPanel.add(new JLabel("Enter Name:"));
         inputPanel.add(nameField);
+
+        // Combine the title panel and input panel in a parent panel
+        JPanel centerPanel = new JPanel(new GridLayout(0, 1));
+        centerPanel.setOpaque(false);
+        centerPanel.add(titleLabel);
+        centerPanel.add(inputPanel);
+
 
         // Start button
         startButton = new JButton("Start");
@@ -85,7 +97,7 @@ public class MainMenu extends GameFrame {
             }
         };
         panel.add(buttonPanel, BorderLayout.EAST);
-        panel.add(inputPanel, BorderLayout.CENTER);
+        panel.add(centerPanel, BorderLayout.CENTER);
         panel.add(startButton, BorderLayout.PAGE_END);
 
         frame.add(panel);
