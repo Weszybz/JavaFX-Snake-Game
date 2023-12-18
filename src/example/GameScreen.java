@@ -113,7 +113,11 @@ public class GameScreen extends GameFrame
 	{
 		g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
 		g.setColor(Color.MAGENTA);
-		g.drawString("SCORE : " + snakeGame.score, 20, 40);
+
+		int scoreX = getWidth() - 20 -  g.getFontMetrics().stringWidth("SCORE : " + snakeGame.score);
+
+		g.drawString("Player: " + playerName, 20,40);
+		g.drawString("SCORE : " + snakeGame.score, scoreX, 40);
 	}
 
 	public void toggleMusic() {
