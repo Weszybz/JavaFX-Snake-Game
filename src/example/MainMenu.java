@@ -4,11 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Image;
 
 public class MainMenu extends GameFrame {
     private JFrame frame;
+    MusicPlayer musicPlayer = new MusicPlayer("src/example/frogger.mp3");
     private JButton startButton;
-    private JTextField nameField; // Field for entering player's name
+    private JButton soundButton; // Button for turning music on/off
+    private JButton settingsButton;
+    private JTextField nameField;
+    private Image soundIcon = ImageUtil.images.get("sound");// Sound icon image
+    private Image settingsIcon = ImageUtil.images.get("settings");// Sound icon image
     /** The background image for the game. */
     public Image background = ImageUtil.images.get("UI-background");
 
@@ -21,15 +27,13 @@ public class MainMenu extends GameFrame {
         frame.setSize(870, 560);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setUndecorated(true); // Optional: for fullscreen
+        //frame.setUndecorated(true); // Optional: for fullscreen
+
 
         // Name input field
         nameField = new JTextField(20);
         JPanel inputPanel = new JPanel(new GridBagLayout());
         inputPanel.setOpaque(false);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.anchor = GridBagConstraints.CENTER;
         inputPanel.add(new JLabel("Enter Name:"));
         inputPanel.add(nameField);
 
@@ -43,6 +47,35 @@ public class MainMenu extends GameFrame {
             }
         });
 
+        // Sound button
+        soundButton = new JButton(new ImageIcon(soundIcon));
+        soundButton.setPreferredSize(new Dimension(32, 32));
+        soundButton.setContentAreaFilled(false);
+        soundButton.setBorder(null);
+        soundButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                toggleMusic(); // Toggle music state when the button is clicked
+            }
+        });
+
+        // Settings button
+        settingsButton = new JButton(new ImageIcon(settingsIcon));
+        settingsButton.setPreferredSize(new Dimension(32, 32));
+        settingsButton.setContentAreaFilled(false);
+        settingsButton.setBorder(null);
+        soundButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+
+        // Add sound button to the top right corner
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.add(soundButton);
+        buttonPanel.add(settingsButton);
+        buttonPanel.setOpaque(false);
+
         // Custom JPanel with background
         JPanel panel = new JPanel(new BorderLayout()) {
             @Override
@@ -51,6 +84,7 @@ public class MainMenu extends GameFrame {
                 g.drawImage(background, 0, 0, this.getWidth(), this.getHeight(), null);
             }
         };
+        panel.add(buttonPanel, BorderLayout.EAST);
         panel.add(inputPanel, BorderLayout.CENTER);
         panel.add(startButton, BorderLayout.PAGE_END);
 
@@ -66,12 +100,19 @@ public class MainMenu extends GameFrame {
             gameScreen.loadFrame();
 
             // Optional: Start playing background music
-            MusicPlayer.getMusicPlay("src/example/frogger.mp3");
+            // MusicPlayer.getMusicPlay("src/example/frogger.mp3");
 
             // Close the main menu window
             frame.dispose();
         } else {
             JOptionPane.showMessageDialog(frame, "Please enter your name.", "Name Required", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void toggleMusic() {
+        if (musicPlayer != null) {
+            // Check if musicPlayer is initialized
+            musicPlayer.toggle(); // Call the toggle method of MusicPlayer
         }
     }
 

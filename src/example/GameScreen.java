@@ -29,7 +29,8 @@ public class GameScreen extends GameFrame
 	public SnakeGame snakeGame = new SnakeGame(100, 100);// x , y
 	/** The food object that the snake can eat */
 	public Food food = new Food();
-
+	private MusicPlayer musicPlayer;
+	private boolean isMusicOn = true; // Flag to track music state
 	/** The background image for the game. */
 	public Image background = ImageUtil.images.get("UI-background");
 	/** The image displayed when the game is over */
@@ -115,6 +116,15 @@ public class GameScreen extends GameFrame
 		g.drawString("SCORE : " + snakeGame.score, 20, 40);
 	}
 
+	public void toggleMusic() {
+		if (isMusicOn) {
+			musicPlayer.stopMusic(); // Stop playing music
+		} else {
+			musicPlayer.start(); // Start playing music
+		}
+		isMusicOn = !isMusicOn;
+	}
+
 	/**
 	 * Method to be called when the game ends.
 	 */
@@ -188,8 +198,11 @@ public class GameScreen extends GameFrame
 	{
 		// Create an instance of the Play class and load the frame
 		new GameScreen("PlayerName").loadFrame();
-		//Start playing background music
-		MusicPlayer.getMusicPlay("src/example/frogger.mp3");
+
+		MusicPlayer musicPlayer = new MusicPlayer("src/example/frogger.mp3");
+		musicPlayer.setLoop(true);
+		musicPlayer.play();
+		musicPlayer.stopMusic();
 
 	}
 }
