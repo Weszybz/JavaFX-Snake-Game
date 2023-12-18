@@ -25,6 +25,11 @@ public class GameFrame extends JPanel implements KeyListener
 {
 	/** A unique serial identification number*/
 	private static final long serialVersionUID = -3149926831770554380L;
+	private String playerName;
+
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;;
+	}
 
 	/** The JFrame used to display the game. */
 	public JFrame jFrame = new JFrame();
@@ -62,6 +67,8 @@ public class GameFrame extends JPanel implements KeyListener
 		jFrame.setVisible(true);
 		new GameThread().start();
 	}
+
+
 
 	/** The MyThread class represents a thread responsible for repainting the game at regular intervals */
 	class GameThread extends Thread
@@ -110,9 +117,9 @@ public class GameFrame extends JPanel implements KeyListener
 	{
 		// Game variables
 		private int speed_XY;
-		private int length;
+		private static int length;
 		private int num; // ?
-		public int score = 0;
+		public static int score = 0;
 
 		// Static images for the snake head and body
 		private static final BufferedImage IMG_SNAKE_HEAD = (BufferedImage) ImageUtil.images.get("snake-head-right");
@@ -123,6 +130,7 @@ public class GameFrame extends JPanel implements KeyListener
 		// Image for the rotated snake head
 		private static BufferedImage newImgSnakeHead;
 		boolean up, down, left, right = true;
+
 
 		/**
 		 * Constructs a new MySnake object with the specified initial position.
@@ -324,5 +332,18 @@ public class GameFrame extends JPanel implements KeyListener
 		{
 			return new Rectangle(x, y, width, height);
 		}
+	}
+
+	public void resetGame() {
+		// Reset the score and length of the snake to their initial values
+		SnakeGame.score = 0; // Access score via the SnakeGame class
+		SnakeGame.length = 1; // Access length via the SnakeGame class
+		SnakeGame.bodyPoints.clear(); // Access bodyPoints via the SnakeGame class
+		// Reset other properties like position, direction, etc.
+		// ...
+	}
+
+	public void closeFrame() {
+		jFrame.dispose();
 	}
 }
