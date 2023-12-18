@@ -133,24 +133,9 @@ public class GameScreen extends GameFrame
 				// Draw the background image here
 				g.drawImage(failImage, 0, 0, getWidth(), getHeight(), null);
 			}
-			@Override
-			public boolean isOpaque() {
-				return false; // Set the panel as not opaque
-			}
 		};
 		leaderboardPanel.setLayout(new BorderLayout()); // Use BorderLayout to add the "Play Again" button
 
-		// Create a background component for the background image
-		JComponent backgroundComponent = new JComponent() {
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
-			}
-		};
-
-		// Add the background component to the NORTH position (above the leaderboard entries)
-		leaderboardPanel.add(backgroundComponent, BorderLayout.NORTH); // Background image
 
 		// Create a JPanel for the leaderboard entries
 		JPanel leaderboardEntriesPanel = new JPanel(new GridLayout(0, 1));
@@ -163,9 +148,6 @@ public class GameScreen extends GameFrame
 			label.setForeground(Color.WHITE);
 			leaderboardEntriesPanel.add(label);
 		}
-
-		// Add the leaderboard entries panel to the center of leaderboardPanel
-		leaderboardPanel.add(leaderboardEntriesPanel, BorderLayout.CENTER);
 
 		// Create a "Play Again" button and add it to the SOUTH position
 		JButton playAgainButton = new JButton("Play Again");
@@ -181,7 +163,6 @@ public class GameScreen extends GameFrame
 		});
 
 		// Add components to leaderboardPanel
-		leaderboardPanel.add(backgroundComponent, BorderLayout.CENTER); // Background image
 		leaderboardPanel.add(leaderboardEntriesPanel, BorderLayout.CENTER);
 		leaderboardPanel.add(playAgainButton, BorderLayout.SOUTH);
 
@@ -189,7 +170,7 @@ public class GameScreen extends GameFrame
 		leaderboardFrame.getContentPane().add(leaderboardPanel);
 
 		// Set the size and visibility of the leaderboard frame
-		leaderboardFrame.setSize(400, 400); // Adjust the size as needed
+		leaderboardFrame.setSize(870, 560);; // Adjust the size as needed
 		leaderboardFrame.setLocationRelativeTo(null); // Center on the screen
 		leaderboardFrame.setVisible(true);
 

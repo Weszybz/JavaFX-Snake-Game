@@ -30,8 +30,8 @@ public class MainMenu extends GameFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.anchor = GridBagConstraints.CENTER;
-        inputPanel.add(new JLabel("Enter Name:"), gbc);
-        inputPanel.add(nameField, gbc);
+        inputPanel.add(new JLabel("Enter Name:"));
+        inputPanel.add(nameField);
 
         // Start button
         startButton = new JButton("Start");
@@ -51,8 +51,8 @@ public class MainMenu extends GameFrame {
                 g.drawImage(background, 0, 0, this.getWidth(), this.getHeight(), null);
             }
         };
-        panel.add(inputPanel, BorderLayout.NORTH);
-        panel.add(startButton, BorderLayout.CENTER);
+        panel.add(inputPanel, BorderLayout.CENTER);
+        panel.add(startButton, BorderLayout.PAGE_END);
 
         frame.add(panel);
         frame.setVisible(true);
