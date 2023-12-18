@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 public class MainMenu extends GameFrame {
     private JFrame frame;
     private JButton startButton;
+    private JTextField nameField; // Field for entering player's name
     /** The background image for the game. */
     public Image background = ImageUtil.images.get("UI-background");
 
@@ -17,16 +18,22 @@ public class MainMenu extends GameFrame {
 
     private void initialize() {
         frame = new JFrame("Main Menu");
+        frame.setSize(870, 560);
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setUndecorated(true);
+        frame.setUndecorated(true); // Optional: for fullscreen
 
-        // Get the local graphics environment and default screen device
-        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice device = env.getDefaultScreenDevice();
+        // Name input field
+        nameField = new JTextField(20);
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setOpaque(false);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.anchor = GridBagConstraints.CENTER;
+        inputPanel.add(new JLabel("Enter Name:"), gbc);
+        inputPanel.add(nameField, gbc);
 
-        // Set the frame to fullscreen
-        device.setFullScreenWindow(frame);
-
+        // Start button
         startButton = new JButton("Start");
         startButton.setPreferredSize(new Dimension(150, 50));
         startButton.addActionListener(new ActionListener() {
@@ -36,41 +43,36 @@ public class MainMenu extends GameFrame {
             }
         });
 
-        // Custom panel for the start button
-        JPanel buttonPanel = new JPanel(new GridBagLayout());
-        buttonPanel.setOpaque(false); // Make the button transparent
-        buttonPanel.add(startButton);
-
         // Custom JPanel with background
-        JPanel panel = new JPanel() {
-          protected void paintComponent(Graphics g) {
-              super.paintComponent(g);
-              g.drawImage(background, 0, 0, this.getWidth(), this.getHeight(), null);
-          }
+        JPanel panel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(background, 0, 0, this.getWidth(), this.getHeight(), null);
+            }
         };
-        panel.setLayout(new FlowLayout());
-        panel.add(buttonPanel, BorderLayout.CENTER);
+        panel.add(inputPanel, BorderLayout.NORTH);
+        panel.add(startButton, BorderLayout.CENTER);
 
         frame.add(panel);
         frame.setVisible(true);
     }
 
     private void startGame() {
+        String playerName = nameField.getText().trim();
+        if (!playerName.isEmpty()) {
+            // Load and display the game window with the player's name
+            GameScreen gameScreen = new GameScreen(playerName);
+            gameScreen.loadFrame();
 
-        // Load and display the game window
-        new GameScreen().loadFrame();
+            // Optional: Start playing background music
+            MusicPlayer.getMusicPlay("src/example/frogger.mp3");
 
-        //Start playing background music
-        MusicPlayer.getMusicPlay("src/example/frogger.mp3");
-
-        // Close the main menu window
-        frame.dispose();
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        g.drawImage(background, 0, 0, null);
+            // Close the main menu window
+            frame.dispose();
+        } else {
+            JOptionPane.showMessageDialog(frame, "Please enter your name.", "Name Required", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public static void main(String[] args){

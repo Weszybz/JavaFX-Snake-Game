@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+import javax.swing.*;
+
 
 /**
  * 
@@ -33,6 +35,23 @@ public class GameScreen extends GameFrame
 	public Image background = ImageUtil.images.get("UI-background");
 	/** The image displayed when the game is over */
 	public Image failImage = ImageUtil.images.get("game-scene-01");
+	private String playerName;
+	private static Leaderboard leaderboard = new Leaderboard();
+	private boolean gameEnded = false; // Flag to indicate if the game has ended
+
+
+	/**
+	 * Constructor for GameScreen.
+	 * @param playerName The name of the player.
+	 */
+	public GameScreen(String playerName) {
+		this.playerName = playerName;
+		//this.leaderboard = new Leaderboard();
+		if (leaderboard == null) {
+			leaderboard = new Leaderboard(); // Initialize the leaderboard only once
+		}
+		loadFrame();
+	}
 
 	/**
 	 * Override the keyPressed method to handle keyboard input.
@@ -75,7 +94,12 @@ public class GameScreen extends GameFrame
 		} else
 		{
 			// If the snake is not alive, show the failure image
-			g.drawImage(failImage, 0, 0, null);
+			if (!snakeGame.isAvailable && !gameEnded) {
+				gameEnded = true; // Set the flag to true to indicate the game has ended
+				g.drawImage(failImage, 0, 0, null);
+				onGameEnd();
+			}
+
 		}
 		// Draw the score on the screen
 		drawScore(g);
@@ -93,6 +117,34 @@ public class GameScreen extends GameFrame
 	}
 
 	/**
+	 * Method to be called when the game ends.
+	 */
+	private void onGameEnd() {
+		leaderboard.addScore(playerName, snakeGame.score);
+		JOptionPane.showMessageDialog(this, leaderboard.getFormattedScores(), "Leaderboard", JOptionPane.INFORMATION_MESSAGE);
+
+		// Ask the player if they want to play again
+		int response = JOptionPane.showConfirmDialog(this, "Do you want to play again?", "Play Again", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+		if (response == JOptionPane.YES_OPTION) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					GameScreen.this.closeFrame(); // Close the current game window
+					// Reset the game state by calling resetGame
+					resetGame(); // This calls the resetGame method of the GameFrame class
+					new GameScreen(playerName).loadFrame(); // Start a new game
+				}
+			});
+		} else {
+			GameScreen.this.closeFrame(); // Close the game window
+			resetGame(); // This calls the resetGame method of the GameFrame class
+			MainMenu mainMenu = new MainMenu();
+		}
+	}
+
+
+	/**
 	 * The main method to the start the game. Creates an instance of the Play class and loads the frame.
 	 *
 	 * @param args The command-line arguments (unused).
@@ -100,7 +152,7 @@ public class GameScreen extends GameFrame
 	public static void main(String[] args)
 	{
 		// Create an instance of the Play class and load the frame
-		new GameScreen().loadFrame();
+		new GameScreen("PlayerName").loadFrame();
 		//Start playing background music
 		MusicPlayer.getMusicPlay("src/example/frogger.mp3");
 
