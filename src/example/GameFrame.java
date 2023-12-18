@@ -307,7 +307,7 @@ public class GameFrame extends JPanel implements KeyListener
 		private void outofBounds()
 		{
 			boolean xOut = (x <= 0 || x >= (870 - width));
-			boolean yOut = (y <= 40 || y >= (560 - height));
+			boolean yOut = (y <= 0 || y >= (560 - height));
 			if (xOut || yOut)
 			{
 				isAvailable = false;
