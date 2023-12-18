@@ -21,6 +21,7 @@ public class Leaderboard {
         }));
     }
 
+
     public void addScore(String name, int score) {
         scores.add(new PlayerScore(name, score));
         Collections.sort(scores);
@@ -88,6 +89,7 @@ public class Leaderboard {
             e.printStackTrace();
         }
     }
+
 
     public static class PlayerScore implements Comparable<PlayerScore> {
         String name;

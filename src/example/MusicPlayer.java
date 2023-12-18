@@ -17,6 +17,9 @@ public class MusicPlayer extends Thread
 	private String filename;
 	/** The player object responsible for playing th music. */
 	public Player player;
+	private boolean loop;
+	private boolean stopped;
+	public boolean isPlaying;
 
 	/**
 	 * Constructs a new MusicPlayer with the specified filename
@@ -26,6 +29,29 @@ public class MusicPlayer extends Thread
 	public MusicPlayer(String filename)
 	{
 		this.filename = filename;
+		this.loop = true;
+		this.stopped = false;
+		this.isPlaying = false;
+	}
+
+	public void setLoop(boolean loop){
+		this.loop = loop;
+	}
+
+	public void stopMusic() {
+		stopped = true;
+		if (player != null){
+			player.close();
+			isPlaying = false;
+		}
+	}
+
+	public void toggle() {
+		if (!stopped) {
+			stopMusic();
+		} else {
+			play();
+		}
 	}
 
 	/**
@@ -38,18 +64,18 @@ public class MusicPlayer extends Thread
 			@Override
 			public void run()
 			{
-				super.run();
-				try
-				{
-					// Open a buffered input stream and create a player for the specified music file.
-					//BufferedInputStream buffer = new BufferedInputStream(new FileInputStream(filename));
-					player = new Player(new BufferedInputStream(new FileInputStream(filename)));
-					player.play();
+				do {
+					try {
+						// Open a buffered input stream and create a player for the specified music file.
+						//BufferedInputStream buffer = new BufferedInputStream(new FileInputStream(filename));
+						stopped = false; // Reset the stopped flag
+						player = new Player(new BufferedInputStream(new FileInputStream(filename)));
+						player.play();
 
-				} catch (Exception e)
-				{
-					System.out.println(e);
-				}
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+				} while (loop & !stopped);
 			}
 		}.start();
 	}
