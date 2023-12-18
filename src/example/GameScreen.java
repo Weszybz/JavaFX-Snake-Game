@@ -1,9 +1,8 @@
 package example;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
 
@@ -36,7 +35,7 @@ public class GameScreen extends GameFrame
 	/** The image displayed when the game is over */
 	public Image failImage = ImageUtil.images.get("game-scene-01");
 	private String playerName;
-	private static Leaderboard leaderboard = new Leaderboard();
+	private static Leaderboard leaderboard;
 	private boolean gameEnded = false; // Flag to indicate if the game has ended
 
 
@@ -121,27 +120,82 @@ public class GameScreen extends GameFrame
 	 */
 	private void onGameEnd() {
 		leaderboard.addScore(playerName, snakeGame.score);
-		JOptionPane.showMessageDialog(this, leaderboard.getFormattedScores(), "Leaderboard", JOptionPane.INFORMATION_MESSAGE);
 
-		// Ask the player if they want to play again
-		int response = JOptionPane.showConfirmDialog(this, "Do you want to play again?", "Play Again", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		// Create a new JFrame for the leaderboard
+		JFrame leaderboardFrame = new JFrame("Leaderboard");
+		leaderboardFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Close only the leaderboard frame
 
-		if (response == JOptionPane.YES_OPTION) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					GameScreen.this.closeFrame(); // Close the current game window
-					// Reset the game state by calling resetGame
-					resetGame(); // This calls the resetGame method of the GameFrame class
-					new GameScreen(playerName).loadFrame(); // Start a new game
-				}
-			});
-		} else {
-			GameScreen.this.closeFrame(); // Close the game window
-			resetGame(); // This calls the resetGame method of the GameFrame class
-			MainMenu mainMenu = new MainMenu();
+		// Create a JPanel for the leaderboard and set its layout
+		JPanel leaderboardPanel = new JPanel() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				// Draw the background image here
+				g.drawImage(failImage, 0, 0, getWidth(), getHeight(), null);
+			}
+			@Override
+			public boolean isOpaque() {
+				return false; // Set the panel as not opaque
+			}
+		};
+		leaderboardPanel.setLayout(new BorderLayout()); // Use BorderLayout to add the "Play Again" button
+
+		// Create a background component for the background image
+		JComponent backgroundComponent = new JComponent() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+			}
+		};
+
+		// Add the background component to the NORTH position (above the leaderboard entries)
+		leaderboardPanel.add(backgroundComponent, BorderLayout.NORTH); // Background image
+
+		// Create a JPanel for the leaderboard entries
+		JPanel leaderboardEntriesPanel = new JPanel(new GridLayout(0, 1));
+		leaderboardEntriesPanel.setOpaque(false);
+
+		// Add leaderboard data (player names and scores) as JLabels or other components to this panel
+		for (Leaderboard.PlayerScore score : leaderboard.getScores()) {
+			JLabel label = new JLabel(score.toString());
+			label.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
+			label.setForeground(Color.WHITE);
+			leaderboardEntriesPanel.add(label);
 		}
+
+		// Add the leaderboard entries panel to the center of leaderboardPanel
+		leaderboardPanel.add(leaderboardEntriesPanel, BorderLayout.CENTER);
+
+		// Create a "Play Again" button and add it to the SOUTH position
+		JButton playAgainButton = new JButton("Play Again");
+		playAgainButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Handle the "Play Again" action here
+				resetGame(); // Reset the game
+				playerName = "PlayerName";;
+				leaderboardFrame.dispose(); // Close the leaderboard frame
+				MainMenu mainMenu = new MainMenu();
+			}
+		});
+
+		// Add components to leaderboardPanel
+		leaderboardPanel.add(backgroundComponent, BorderLayout.CENTER); // Background image
+		leaderboardPanel.add(leaderboardEntriesPanel, BorderLayout.CENTER);
+		leaderboardPanel.add(playAgainButton, BorderLayout.SOUTH);
+
+		// Add the leaderboard panel to the leaderboard frame
+		leaderboardFrame.getContentPane().add(leaderboardPanel);
+
+		// Set the size and visibility of the leaderboard frame
+		leaderboardFrame.setSize(400, 400); // Adjust the size as needed
+		leaderboardFrame.setLocationRelativeTo(null); // Center on the screen
+		leaderboardFrame.setVisible(true);
+
+		closeFrame();
 	}
+
 
 
 	/**
