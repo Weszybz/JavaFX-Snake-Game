@@ -31,5 +31,6 @@ public class ImageUtil
 		images.put("sound", GameUtil.getImage("example/sound.png"));
 		images.put("settings", GameUtil.getImage("example/settings.png"));
 		images.put("pause", GameUtil.getImage("example/pause.png"));
+		images.put("help", GameUtil.getImage("example/help.png"));
 	}
 }
