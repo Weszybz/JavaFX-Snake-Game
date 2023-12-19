@@ -22,6 +22,10 @@ public class GameUtil
 	public static Image getImage(String imagePath)
 	{
 		URL url = GameUtil.class.getClassLoader().getResource(imagePath);
+		if (url == null) {
+			System.err.println("Image not found: " + imagePath);
+			return null; // Return null or a default image
+		}
 		BufferedImage image = null;
 		try
 		{

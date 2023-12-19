@@ -27,6 +27,7 @@ public class GameScreen extends GameFrame
 	public SnakeGame snakeGame = new SnakeGame(100, 100);// x , y
 	/** The food object that the snake can eat */
 	public Food food = new Food();
+	public Paddle paddle = new Paddle(100, 20, new Rectangle(0, 0, 900, 560));
 	private MusicPlayer musicPlayer = new MusicPlayer("src/example/death.mp3", false);;
 	private boolean isMusicOn = true; // Flag to track music state
 	/** The background image for the game. */
@@ -112,11 +113,20 @@ public class GameScreen extends GameFrame
 		super.paint(g);
 		g.drawImage(background, 0, 0, null);
 
+//		paddle.draw(g);
+
+
 		// Determine the state of the game
 		if (snakeGame.isAvailable)
 		{
 			// Draw the snake
+			if (paddle.isAvailable()) {
+				paddle.move();
+				paddle.draw(g);
+				paddle.checkCollision(snakeGame);
+			}
 			snakeGame.draw(g);
+
 			if (food.isAvailable)
 			{
 				// Draw and check for the eaten food
@@ -138,9 +148,7 @@ public class GameScreen extends GameFrame
 					MainMenu.musicPlayer.resetMusic();
 				}
 				musicPlayer.play();
-
 			}
-
 		}
 
 		if (!snakeGame.isPaused) {
@@ -168,6 +176,7 @@ public class GameScreen extends GameFrame
 		g.drawString("SCORE : " + snakeGame.score, scoreX, 40);
 	}
 
+
 	public void toggleMusic() {
 		if (isMusicOn) {
 			musicPlayer.stopMusic(); // Stop playing music
@@ -192,12 +201,15 @@ public class GameScreen extends GameFrame
 	// Method to pause the game (you can implement this)
 	private void pauseGame() {
 		snakeGame.isPaused = true;
+		paddle.stop();
 	}
 
 	// Method to resume the game (you can implement this)
 	private void resumeGame() {
 		snakeGame.isPaused = false;
 		snakeGame.resetUpdateCounter(); // Reset the counter when game is resumed
+		paddle.resume();
+		paddle.move();
 	}
 
 
