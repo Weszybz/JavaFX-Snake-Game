@@ -107,7 +107,6 @@ public class MusicPlayer extends Thread
 			}
 			isPlaying = false;
 			stopped = true; // Ensure that the current play loop stops
-			loop = false;
 
 			// Reset the player for future use
 			player = null;
