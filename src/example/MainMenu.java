@@ -12,11 +12,26 @@ public class MainMenu extends GameFrame {
     private JButton startButton;
     private JButton soundButton; // Button for turning music on/off
     private JButton settingsButton;
+    private JButton helpButton;
     private JTextField nameField;
     private Image soundIcon = ImageUtil.images.get("sound");// Sound icon image
-    private Image settingsIcon = ImageUtil.images.get("settings");// Sound icon image
+    private Image settingsIcon = ImageUtil.images.get("settings");
+    private Image helpIcon = ImageUtil.images.get("help");
     /** The background image for the game. */
     public Image background = ImageUtil.images.get("UI-background");
+
+    private void displayInstructions() {
+        // Create the instructions message
+        String instructions = "Snake Game Instructions:\n"
+                + "1. Use arrow keys to move the snake (Up, Down, Left, Right).\n"
+                + "2. Eat the food to grow and earn points.\n"
+                + "3. Avoid hitting walls or yourself to stay alive.\n"
+                + "4. Your score is displayed on the screen.\n"
+                + "5. Have fun and beat your high score!\n";
+
+        // Show instructions in a message dialog
+        JOptionPane.showMessageDialog(frame, instructions, "Snake Game Instructions", JOptionPane.INFORMATION_MESSAGE);
+    }
 
     public MainMenu() {
         initialize();
@@ -82,10 +97,22 @@ public class MainMenu extends GameFrame {
             }
         });
 
+        helpButton = new JButton(new ImageIcon(helpIcon));
+        helpButton.setPreferredSize(new Dimension(32, 32));
+        helpButton.setContentAreaFilled(false);
+        helpButton.setBorder(null);
+        helpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayInstructions();
+            }
+        });
+
         // Add sound button to the top right corner
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(soundButton);
         buttonPanel.add(settingsButton);
+        buttonPanel.add(helpButton);
         buttonPanel.setOpaque(false);
 
         // Custom JPanel with background
