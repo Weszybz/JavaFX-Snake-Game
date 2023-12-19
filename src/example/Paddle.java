@@ -13,7 +13,7 @@ public class Paddle {
     public static final Color INNER_COLOR = Color.GREEN;
 
     /** The default movement amount of the paddle */
-    public static final int DEFAULT_MOVE_AMOUNT = 5;
+    public static final int DEFAULT_MOVE_AMOUNT = 3;
 
     /** The rectangle representing the face of the paddle. */
     private Rectangle paddleFace;
@@ -21,26 +21,37 @@ public class Paddle {
     private Point ballPoint;
     /** The movement amount of the paddle. */
     private int moveAmount;
+    /** The last movement before the game was paused. */
+    private int lastMoveAmount;
     /** The minimum x-coordinate of the paddle's movement. */
     private int min;
     /** The maximum x-coordinate of the paddle's movement. */
     private int max;
+    private boolean isAvailable;
 
 
     /**
      * Constructs a new Paddle with the specified ball point, width, height and container rectangle.
-     * @param ballPoint The point representing the current position of the ball.
      * @param width The width of the paddle.
      * @param height The height of the paddle.
      * @param container The rectangle representing the container for the paddle's movement.
      */
-    public Paddle(Point ballPoint, int width, int height, Rectangle container) {
-        this.ballPoint = ballPoint;
-        moveAmount = 0;
-        paddleFace = makeRectangle(width, height);
-        min = container.x + (width / 2);
-        max = min + container.width - width;
+    public Paddle(int width, int height, Rectangle container) {
+        // Generate a random x-coordinate within the bounds of the container
+        int x = (int) (Math.random() * (870 - width + 10));
 
+        // Generate a random y-coordinate within the bounds of the container
+        int y = (int) (Math.random() * (560 - height - 40));
+
+        // Set the paddle's initial position
+        this.ballPoint = new Point(x, y);
+
+        // Initialize other paddle properties
+        this.moveAmount = DEFAULT_MOVE_AMOUNT;
+        this.paddleFace = makeRectangle(width, height);
+        this.min = container.x + 40;
+        this.max = container.x + container.width;
+        this.isAvailable = true;
     }
 
     /**
@@ -55,11 +66,14 @@ public class Paddle {
         return  new Rectangle(p,new Dimension(width,height));
     }
 
-    /** Moves the paddle based on teh current move amount */
+    /** Moves the paddle based on the current move amount */
     public void move(){
         double x = ballPoint.getX() + moveAmount;
-        if(x < min || x > max)
-            return;
+        if(x <= min){
+            moveRight();
+        } else if (x >= max - paddleFace.width) {
+            moveLeft();
+        }
         ballPoint.setLocation(x,ballPoint.getY());
         paddleFace.setLocation(ballPoint.x - (int) paddleFace.getWidth()/2,ballPoint.y);
     }
@@ -76,14 +90,20 @@ public class Paddle {
 
     /** Stops the movement of the paddle. */
     public void stop(){
+        lastMoveAmount = moveAmount;
         moveAmount = 0;
     }
 
-    /** Gets the shape representing the face of the paddle.
+    public void resume() {
+        moveAmount = lastMoveAmount;
+    }
+
+    /**
+     * Gets the shape representing the face of the paddle.
      *
      * @return The shape representing the face of the paddle,
      */
-    public Shape getPaddleFace(){
+    public Rectangle getPaddleFace(){
         return paddleFace;
     }
 
@@ -96,4 +116,47 @@ public class Paddle {
         ballPoint.setLocation(p);
         paddleFace.setLocation(ballPoint.x - (int) paddleFace.getWidth()/2,ballPoint.y);
     }
+
+    /**
+     * Returns the availability of the paddle.
+     *
+     * @return true if the paddle is available, false otherwise.
+     */
+
+    public void setAvailable(boolean available) {
+        this.isAvailable = available;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    /**
+     * Checks if the snake has collided with the paddle.
+     *
+     * @param snakeGame The rectangle representing the snake's head.
+     */
+    public void checkCollision(GameFrame.SnakeGame snakeGame) {
+        Rectangle snakeHead = snakeGame.getRectangle(); // Get snake's head rectangle
+        if (snakeHead.intersects(paddleFace)) {
+            snakeGame.isAvailable = false;
+        }
+    }
+
+    /**
+     * Draws the paddle on the given Graphics context.
+     *
+     * @param g The Graphics object to draw on.
+     */
+    public void draw(Graphics g) {
+        // Set the color for the paddle's interior
+        g.setColor(INNER_COLOR);
+        g.fillRect(paddleFace.x, paddleFace.y, paddleFace.width, paddleFace.height);
+
+        // Set the color for the paddle's border
+        g.setColor(BORDER_COLOR);
+        g.drawRect(paddleFace.x, paddleFace.y, paddleFace.width, paddleFace.height);
+    }
+
+
 }
