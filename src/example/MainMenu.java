@@ -8,7 +8,7 @@ import java.awt.Image;
 
 public class MainMenu extends GameFrame {
     private JFrame frame;
-    MusicPlayer musicPlayer = new MusicPlayer("src/example/frogger.mp3");
+    public static MusicPlayer musicPlayer = new MusicPlayer("src/example/frogger.mp3", true);
     private JButton startButton;
     private JButton soundButton; // Button for turning music on/off
     private JButton settingsButton;
@@ -39,7 +39,7 @@ public class MainMenu extends GameFrame {
 
     private void initialize() {
         frame = new JFrame("Main Menu");
-        frame.setSize(870, 560);
+        frame.setSize(900, 560);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.setUndecorated(true); // Optional: for fullscreen
@@ -143,6 +143,7 @@ public class MainMenu extends GameFrame {
 
             // Close the main menu window
             frame.dispose();
+
         } else {
             JOptionPane.showMessageDialog(frame, "Please enter your name.", "Name Required", JOptionPane.ERROR_MESSAGE);
         }
@@ -156,11 +157,6 @@ public class MainMenu extends GameFrame {
     }
 
     public static void main(String[] args){
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MainMenu();
-            }
-        });
+        new MainMenu();
     }
 }
