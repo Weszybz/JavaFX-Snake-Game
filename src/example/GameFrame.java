@@ -1,16 +1,12 @@
 package example;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 /**
  * @Project Snake
@@ -26,6 +22,9 @@ public class GameFrame extends JPanel implements KeyListener
 	/** A unique serial identification number*/
 	private static final long serialVersionUID = -3149926831770554380L;
 	private String playerName;
+	private JButton pauseButton;
+	private Image pauseIcon = ImageUtil.images.get("pause");
+	private MusicPlayer musicPlayer;
 
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;;
@@ -49,11 +48,12 @@ public class GameFrame extends JPanel implements KeyListener
 	{
 		/** Prevent the game from flashing or buffering */
 		this.setDoubleBuffered(true);
+		this.setOpaque(true);
 		jFrame.add(this);
 		jFrame.addKeyListener(this);
 
 		jFrame.setTitle("Snake Game");
-		jFrame.setSize(870, 560);
+		jFrame.setSize(900, 560);
 		jFrame.setLocationRelativeTo(null);
 		jFrame.addWindowListener(new WindowAdapter()// Closing
 		{
@@ -64,9 +64,13 @@ public class GameFrame extends JPanel implements KeyListener
 				System.exit(0);
 			}
 		});
+
+
 		jFrame.setVisible(true);
+
 		new GameThread().start();
 	}
+
 
 
 
@@ -130,6 +134,7 @@ public class GameFrame extends JPanel implements KeyListener
 		// Image for the rotated snake head
 		private static BufferedImage newImgSnakeHead;
 		boolean up, down, left, right = true;
+		private int updatesAfterResume = 0;
 
 
 		/**
@@ -141,13 +146,14 @@ public class GameFrame extends JPanel implements KeyListener
 		public SnakeGame(int x, int y)
 		{
 			this.isAvailable = true;
+			this.isPaused = false;
 			this.x = x;
 			this.y = y;
 			this.image = ImageUtil.images.get("snake-body");
 			this.width = image.getWidth(null);
 			this.height = image.getHeight(null);
 
-			this.speed_XY = 5;
+			this.speed_XY = 1;
 			this.length = 1;
 
 			/*
@@ -244,19 +250,19 @@ public class GameFrame extends JPanel implements KeyListener
 
 		public void move()
 		{
-			// Let the snake move right
-			if (up)
-			{
-				y -= speed_XY;
-			} else if (down)
-			{
-				y += speed_XY;
-			} else if (left)
-			{
-				x -= speed_XY;
-			} else if (right)
-			{
-				x += speed_XY;
+			// Check if the game is paused
+			if(!isPaused) {
+				// Let the snake move right
+				if (up) {
+					y -= speed_XY;
+				} else if (down) {
+					y += speed_XY;
+				} else if (left) {
+					x -= speed_XY;
+				} else if (right) {
+					x += speed_XY;
+				}
+				updatesAfterResume++;
 			}
 
 		}
@@ -265,7 +271,6 @@ public class GameFrame extends JPanel implements KeyListener
 		public void draw(Graphics g)
 		{
 			outofBounds();
-			eatBody();
 
 			bodyPoints.add(new Point(x, y));
 
@@ -276,21 +281,27 @@ public class GameFrame extends JPanel implements KeyListener
 			g.drawImage(newImgSnakeHead, x, y, null);
 			drawBody(g);
 
-			move();
+			if(!isPaused) {
+				move();
+				eatBody();
+			}
 		}
 
-		public void eatBody()
-		{
-			for (Point point : bodyPoints)
-			{
-				for (Point point2 : bodyPoints)
-				{
-					if (point.equals(point2) && point != point2)
-					{
+		public void eatBody() {
+			if (updatesAfterResume > 3) {  // Allow a few updates before checking collision
+				Point head = bodyPoints.get(bodyPoints.size() - 1);
+				for (int i = 0; i < bodyPoints.size() - 1; i++) {
+					Point bodyPoint = bodyPoints.get(i);
+					if (head.equals(bodyPoint)) {
 						this.isAvailable = false;
+						break;
 					}
 				}
 			}
+		}
+
+		public void resetUpdateCounter() {
+			updatesAfterResume = 0;
 		}
 
 		public void drawBody(Graphics g)
@@ -324,6 +335,7 @@ public class GameFrame extends JPanel implements KeyListener
 		int height;
 
 		public boolean isAvailable;
+		public boolean isPaused;
 
 
 		public abstract void draw(Graphics g);
@@ -339,6 +351,10 @@ public class GameFrame extends JPanel implements KeyListener
 		SnakeGame.score = 0; // Access score via the SnakeGame class
 		SnakeGame.length = 1; // Access length via the SnakeGame class
 		SnakeGame.bodyPoints.clear(); // Access bodyPoints via the SnakeGame class
+
+		if (musicPlayer != null && musicPlayer.isPlaying) {
+			musicPlayer.toggle();
+		}
 		// Reset other properties like position, direction, etc.
 		// ...
 	}

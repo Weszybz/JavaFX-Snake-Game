@@ -16,7 +16,8 @@ public class MusicPlayer extends Thread
 	/** The filename of the music file to be played. */
 	private String filename;
 	/** The player object responsible for playing th music. */
-	public Player player;
+	private Player player;
+	private final Object lock = new Object();
 	private boolean loop;
 	private boolean stopped;
 	public boolean isPlaying;
@@ -26,10 +27,10 @@ public class MusicPlayer extends Thread
 	 *
 	 * @param filename The filename of the music file to be played.
 	 */
-	public MusicPlayer(String filename)
+	public MusicPlayer(String filename, boolean loop)
 	{
 		this.filename = filename;
-		this.loop = true;
+		this.loop = loop;
 		this.stopped = false;
 		this.isPlaying = false;
 	}
@@ -39,18 +40,23 @@ public class MusicPlayer extends Thread
 	}
 
 	public void stopMusic() {
-		stopped = true;
-		if (player != null){
-			player.close();
-			isPlaying = false;
+		synchronized (lock) {
+			stopped = true;
+			if (player != null) {
+				player.close();
+				isPlaying = false;
+			}
 		}
 	}
 
 	public void toggle() {
-		if (!stopped) {
-			stopMusic();
-		} else {
-			play();
+		synchronized (lock) {
+			if (!isPlaying) {
+				play();
+			} else {
+				stopMusic();
+				isPlaying = false;
+			}
 		}
 	}
 
@@ -59,6 +65,13 @@ public class MusicPlayer extends Thread
 	 */
 	public void play()
 	{
+		synchronized (lock) {
+			if (isPlaying) {
+				return; // Already playing
+			}
+			isPlaying = true;
+			stopped = false;
+			}
 		new Thread()
 		{
 			@Override
@@ -68,14 +81,15 @@ public class MusicPlayer extends Thread
 					try {
 						// Open a buffered input stream and create a player for the specified music file.
 						//BufferedInputStream buffer = new BufferedInputStream(new FileInputStream(filename));
-						stopped = false; // Reset the stopped flag
+
 						player = new Player(new BufferedInputStream(new FileInputStream(filename)));
 						player.play();
 
 					} catch (Exception e) {
-						System.out.println(e);
+						System.out.println("Error playing music file: " + e);
 					}
 				} while (loop & !stopped);
+				isPlaying = false;
 			}
 		}.start();
 	}
@@ -86,9 +100,16 @@ public class MusicPlayer extends Thread
 	 *
 	 * @param filename The filename of the music file to be played.
 	 */
-	public static void getMusicPlay(String filename)
-	{
-		MusicPlayer musicPlayer = new MusicPlayer(filename);
-		musicPlayer.play();
+	public void resetMusic() {
+		synchronized (lock) {
+			if (player != null) {
+				player.close();  // Stop current playback
+			}
+			isPlaying = false;
+			stopped = true; // Ensure that the current play loop stops
+
+			// Reset the player for future use
+			player = null;
+		}
 	}
 }
