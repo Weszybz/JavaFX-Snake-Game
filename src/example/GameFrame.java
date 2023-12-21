@@ -153,7 +153,7 @@ public class GameFrame extends JPanel implements KeyListener
 			this.width = image.getWidth(null);
 			this.height = image.getHeight(null);
 
-			this.speed_XY = 1;
+			this.speed_XY = 2;
 			this.length = 1;
 
 			/*
@@ -182,6 +182,10 @@ public class GameFrame extends JPanel implements KeyListener
 		public void changeLength(int length)
 		{
 			this.length = length;
+		}
+
+		public void setSpeed(int newSpeed) {
+			this.speed_XY = newSpeed;
 		}
 
 		/**
@@ -344,6 +348,7 @@ public class GameFrame extends JPanel implements KeyListener
 		{
 			return new Rectangle(x, y, width, height);
 		}
+
 	}
 
 	public void resetGame() {

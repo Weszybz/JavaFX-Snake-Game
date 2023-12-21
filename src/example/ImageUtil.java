@@ -27,6 +27,8 @@ public class ImageUtil
 
 		// User interface and scene background images
 		images.put("UI-background", GameUtil.getImage("example/UI-background.png"));
+		images.put("UI-background2", GameUtil.getImage("example/UI-background2.png"));
+		images.put("UI-background3", GameUtil.getImage("example/UI-background3.jpg"));
 		images.put("game-scene-01", GameUtil.getImage("example/game-scene-01.jpg"));
 		images.put("sound", GameUtil.getImage("example/sound.png"));
 		images.put("settings", GameUtil.getImage("example/settings.png"));

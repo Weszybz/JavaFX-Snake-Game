@@ -2,6 +2,8 @@ package example;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
+import java.util.ArrayList;
 import javax.swing.*;
 
 
@@ -27,6 +29,7 @@ public class GameScreen extends GameFrame
 	public SnakeGame snakeGame = new SnakeGame(100, 100);// x , y
 	/** The food object that the snake can eat */
 	public Food food = new Food();
+	private List <Paddle> paddles = new ArrayList<>();
 	public Paddle paddle = new Paddle(100, 20, new Rectangle(0, 0, 900, 560));
 	private MusicPlayer musicPlayer = new MusicPlayer("src/example/death.mp3", false);;
 	private boolean isMusicOn = true; // Flag to track music state
@@ -40,6 +43,7 @@ public class GameScreen extends GameFrame
 	private boolean isPaused = false; // Flag to track pause state
 	private JButton pauseButton;
 	private Image pauseIcon = ImageUtil.images.get("pause");
+	private int currentLevelIndex = 0; // Start with the first level
 
 
 	/**
@@ -52,6 +56,8 @@ public class GameScreen extends GameFrame
 		if (leaderboard == null) {
 			leaderboard = new Leaderboard(); // Initialize the leaderboard only once
 		}
+
+
 
 		// Create the pause button
 		pauseButton = new JButton(new ImageIcon(pauseIcon));
@@ -90,6 +96,26 @@ public class GameScreen extends GameFrame
 		loadFrame();
 	}
 
+	private void applyLevelSettings() {
+
+		Level currentLevel = GameConfig.LEVELS[currentLevelIndex];
+
+		// Adjust snake speed
+		snakeGame.setSpeed(currentLevel.getSnakeSpeed());
+
+		// Change background
+		background = currentLevel.getBackgroundImage();
+
+		// Handle paddles
+		// This might involve creating or removing paddle instances
+		// For example:
+		paddles.clear(); // Assuming 'paddles' is a List<Paddle>
+		for (int i = 0; i < currentLevel.getNumberOfPaddles(); i++) {
+			paddles.add(new Paddle(100, 20, new Rectangle(0, 0, 900, 560)));
+			System.out.println(currentLevel.getNumberOfPaddles());
+		}
+	}
+
 	/**
 	 * Override the keyPressed method to handle keyboard input.
 	 *
@@ -111,6 +137,8 @@ public class GameScreen extends GameFrame
 	public void paint(Graphics g)
 	{
 		super.paint(g);
+		//applyLevelSettings();
+		checkAndChangeLevel();
 		g.drawImage(background, 0, 0, null);
 
 //		paddle.draw(g);
@@ -121,9 +149,11 @@ public class GameScreen extends GameFrame
 		{
 			// Draw the snake
 			if (paddle.isAvailable()) {
-				paddle.move();
-				paddle.draw(g);
-				paddle.checkCollision(snakeGame);
+				for (Paddle paddle : paddles) {
+					paddle.move();
+					paddle.draw(g);
+					paddle.checkCollision(snakeGame);
+			}
 			}
 			snakeGame.draw(g);
 
@@ -201,16 +231,43 @@ public class GameScreen extends GameFrame
 	// Method to pause the game (you can implement this)
 	private void pauseGame() {
 		snakeGame.isPaused = true;
-		paddle.stop();
+		for (Paddle paddle : paddles) {
+			paddle.stop();
+		}
 	}
 
 	// Method to resume the game (you can implement this)
 	private void resumeGame() {
 		snakeGame.isPaused = false;
 		snakeGame.resetUpdateCounter(); // Reset the counter when game is resumed
-		paddle.resume();
-		paddle.move();
+		for (Paddle paddle : paddles) {
+			paddle.resume();
+			paddle.move();
+		}
 	}
+
+	public class GameConfig {
+		public static final Level[] LEVELS = {
+				new Level(1, 1, ImageUtil.images.get("UI-background")),
+				new Level(2, 1, ImageUtil.images.get("UI-background")),
+				new Level(3, 2, ImageUtil.images.get("UI-background2")),
+				new Level(4, 3, ImageUtil.images.get("UI-background2")),
+				new Level(5, 4, ImageUtil.images.get("UI-background3")),
+				new Level(6, 5, ImageUtil.images.get("UI-background3")),
+		};
+	}
+
+	private void checkAndChangeLevel() {
+		// Determine the new level based on the score
+		int newLevelIndex = snakeGame.score / 30;
+
+		// Check if the level should change
+		if (newLevelIndex != currentLevelIndex && newLevelIndex < GameConfig.LEVELS.length) {
+			currentLevelIndex = newLevelIndex;
+			applyLevelSettings();
+		}
+	}
+
 
 
 	// Method to display the pause menu
