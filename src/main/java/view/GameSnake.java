@@ -28,6 +28,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import model.Direction;
+import model.Food;
+import model.Levels;
 import model.Paddle;
 
 /**
@@ -50,6 +52,7 @@ public class GameSnake extends Application {
 	private StackPane layeredPane; // New StackPane to layer the pause screen
 	private Rectangle pauseOverlay; // Using Rectangle for the semi-transparent layer
 	private model.Paddle paddle;
+	private Levels levels;
 
 	Image muteImage = new Image(getClass().getResource("/sound.png").toExternalForm());
 	ImageView muteView = new ImageView(muteImage);
@@ -178,8 +181,12 @@ public class GameSnake extends Application {
 				// Clear the canvas
 				gc.clearRect(0, 0, WIDTH, HEIGHT);
 
-				// Move the paddle and draw it
-				if (paddle != null) {
+				// Move and draw paddles
+				for (Paddle paddle : levels.getPaddles()) {
+					if (snake.checkCollisionWithPaddle(paddle)) {
+						stop(); // Stop the AnimationTimer
+						showGameOverMenu();
+					}
 					paddle.move();
 					paddle.draw(gc);
 				}
@@ -188,8 +195,15 @@ public class GameSnake extends Application {
 				snake.move(now);
 				snake.draw(gc);
 
-				// Draw the food
-				food.draw(gc);
+				// Draw foods
+				for (Food food : levels.getFoods()) {
+					if (snake.isCollidingWithFood(food)) {
+						snake.grow(); // Snake grows in size
+						snake.increaseScore(10); // Increase score
+						food.relocateAndChangeImage(); // Relocate and change the food image
+					}
+					food.draw(gc); // Assuming Food class has draw method
+				}
 
 				// Draw the score
 				drawScore(gc);
@@ -201,13 +215,28 @@ public class GameSnake extends Application {
 				}else {
 					// Game continues
 					checkForFoodConsumption();
+					// After checking for food consumption or score update
+					levels.updateLevel(snake.getScore());
 					gc.clearRect(0, 0, WIDTH, HEIGHT);
-					if (paddle != null) {
+					// Move and draw paddles
+					for (Paddle paddle : levels.getPaddles()) {
+						if (snake.checkCollisionWithPaddle(paddle)) {
+							stop(); // Stop the AnimationTimer
+							showGameOverMenu();
+						}
 						paddle.move();
 						paddle.draw(gc);
 					}
 					snake.draw(gc);
-					food.draw(gc);
+					// Draw foods
+					for (Food food : levels.getFoods()) {
+						if (snake.isCollidingWithFood(food)) {
+							snake.grow(); // Snake grows in size
+							snake.increaseScore(10); // Increase score
+							food.relocateAndChangeImage(); // Relocate and change the food image
+						}
+						food.draw(gc); // Assuming Food class has draw method
+					}
 					drawScore(gc); // Draw the score
 				}
 				// Optionally: Check for collisions between the snake and the paddle
@@ -251,6 +280,9 @@ public class GameSnake extends Application {
 
 		// Create a new Paddle instance with the specified dimensions and game width
 		paddle = new Paddle((int)paddleWidth, (int)paddleHeight, gameWidth);
+
+		levels = new Levels(foodImageKeys);
+		levels.addInitialElements(paddle, food);
 
 
 
