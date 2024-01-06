@@ -1,7 +1,10 @@
 package model;
 
+import javafx.geometry.Bounds;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -168,6 +171,32 @@ public class Snake {
         Objects head = body.get(0);
         return head.getX() == food.getX() && head.getY() == food.getY();
     }
+
+    public boolean checkCollisionWithPaddle(Paddle paddle) {
+        Objects head = body.get(0); // Assuming this gives you the head of the snake
+        Rectangle2D headRect = new Rectangle2D(
+                head.getX() * util.GameUtil.CELL_SIZE,
+                head.getY() * util.GameUtil.CELL_SIZE,
+                util.GameUtil.CELL_SIZE,
+                util.GameUtil.CELL_SIZE
+        );
+
+        Rectangle paddleFace = paddle.getPaddleFace();
+
+        // Convert Bounds to Rectangle2D for intersection check
+        Bounds bounds = paddleFace.getBoundsInLocal();
+        Rectangle2D paddleRect = new Rectangle2D(
+                bounds.getMinX(),
+                bounds.getMinY(),
+                bounds.getWidth(),
+                bounds.getHeight()
+        );
+
+        return headRect.intersects(paddleRect);
+    }
+
+
+
 
     /**
      * Increases the score by a specified increment (10).
