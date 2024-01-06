@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Leaderboard">
+    <children>
+        <VBox alignment="CENTER">
+            <Text text="Leaderboard:" styleClass="leaderboard-title"/>
+            <ListView fx:id="scoreListView" styleClass="leaderboard-score"/>
+        </VBox>
+    </children>
+</StackPane>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.Settings"
+            styleClass="options-menu">
+
+    <!-- Top Section for Back Button -->
+    <top>
+        <HBox alignment="TOP_LEFT" spacing="10" style="-fx-padding: 10;">
+            <Button fx:id="backButton" text="Back" styleClass="back-button" />
+        </HBox>
+    </top>
+
+    <!-- Center Section for Main Content -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true">
+            <VBox alignment="CENTER" spacing="20" style="-fx-padding: 20;">
+
+                <!-- Choose Background Section -->
+                <VBox spacing="10" alignment="CENTER">
+                    <Label fx:id="chooseBackgroundTitle" text="Choose Background" styleClass="background-title" />
+
+                    <HBox alignment="CENTER" spacing="10">
+                        <Button fx:id="leftArrowButton" text="&#60;" styleClass="arrow-button" />
+                        <ImageView fx:id="backgroundImage" fitWidth="150" fitHeight="150" preserveRatio="true" />
+                        <Button fx:id="rightArrowButton" text="&#62;" styleClass="arrow-button" />
+                    </HBox>
+
+                    <Button fx:id="selectButton" text="Select Background" styleClass="select-button" />
+                </VBox>
+
+                <!-- Select Speed Section -->
+                <VBox spacing="10" alignment="CENTER">
+                    <Label text="Choose Speed" styleClass="background-title" />
+                    <HBox alignment="CENTER" spacing="10">
+                        <Button fx:id="leftSpeedArrowButton" text="&#60;" styleClass="arrow-button" />
+                        <Label fx:id="speedLabel" text="Speed: 1" />
+                        <Button fx:id="rightSpeedArrowButton" text="&#62;" styleClass="arrow-button" />
+                    </HBox>
+                    <Button fx:id="selectSpeedButton" text="Choose Speed" styleClass="select-button" />
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
