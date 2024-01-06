@@ -5,6 +5,7 @@ import controller.Leaderboard;
 import controller.Settings;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -27,12 +28,13 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import model.Direction;
+import model.Paddle;
 
 /**
  * Main class for the snake game application.
  * Sets up the stage and scene for the game, handles user interactions, and controls the game states.
  */
-public class Snake extends Application {
+public class GameSnake extends Application {
 	private static final int WIDTH = 870;
 	private static final int HEIGHT = 560;
 	private model.Snake snake;
@@ -47,6 +49,7 @@ public class Snake extends Application {
 	private Stage primaryStage;
 	private StackPane layeredPane; // New StackPane to layer the pause screen
 	private Rectangle pauseOverlay; // Using Rectangle for the semi-transparent layer
+	private model.Paddle paddle;
 
 	Image muteImage = new Image(getClass().getResource("/sound.png").toExternalForm());
 	ImageView muteView = new ImageView(muteImage);
@@ -55,7 +58,7 @@ public class Snake extends Application {
 	Image pauseImage = new Image(getClass().getResource("/pause.png").toExternalForm());
 	ImageView pauseView = new ImageView(pauseImage);
 
-	public Snake(String playerName) {
+	public GameSnake(String playerName) {
 		this.playerName = playerName; // Initialize player name
 	}
 
@@ -169,30 +172,48 @@ public class Snake extends Application {
 	}
 
 	private void startGameLoop(GraphicsContext gc) {
-		/**
-		 * Starts the main game loop through the use of animation timer.
-		 * Manages game state updates and rendering.
-		 *
-		 * @param gc The GraphicsContext for drawing game elements on the canvas.
-		 */
 		gameLoop = new AnimationTimer() {
-
 			@Override
 			public void handle(long now) {
+				// Clear the canvas
+				gc.clearRect(0, 0, WIDTH, HEIGHT);
+
+				// Move the paddle and draw it
+				if (paddle != null) {
+					paddle.move();
+					paddle.draw(gc);
+				}
+
 				// Move the snake and check for collisions
 				snake.move(now);
+				snake.draw(gc);
+
+				// Draw the food
+				food.draw(gc);
+
+				// Draw the score
+				drawScore(gc);
 
 				// Check if the snake is out of bounds or if the game is over
 				if (snake.isOutOfBounds() || snake.isGameOver()) {
 					stop(); // Stop the AnimationTimer
 					showGameOverMenu(); // Show game over menu
-				} else {
+				}else {
 					// Game continues
 					checkForFoodConsumption();
 					gc.clearRect(0, 0, WIDTH, HEIGHT);
+					if (paddle != null) {
+						paddle.move();
+						paddle.draw(gc);
+					}
 					snake.draw(gc);
 					food.draw(gc);
 					drawScore(gc); // Draw the score
+				}
+				// Optionally: Check for collisions between the snake and the paddle
+				if (snake.checkCollisionWithPaddle(paddle)) {
+					stop(); // Stop the AnimationTimer
+					showGameOverMenu();
 				}
 			}
 		};
@@ -222,6 +243,16 @@ public class Snake extends Application {
 
 		List<String> foodImageKeys = Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16");
 		food = new model.Food(foodImageKeys); // Initialize food with multiple images
+
+		// Initialize the paddle
+		double paddleWidth = 100; // Example width
+		double paddleHeight = 20; // Example height
+		double gameWidth = WIDTH; // Use the game's width for the paddle's movement range
+
+		// Create a new Paddle instance with the specified dimensions and game width
+		paddle = new Paddle((int)paddleWidth, (int)paddleHeight, gameWidth);
+
+
 
 	}
 
