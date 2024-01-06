@@ -179,12 +179,24 @@ public class GameFrameFX {
         helpStage.setTitle("Game Help");
 
         // Instructions text or content
-        Text instructions = new Text("Snake Game Instructions:\n\n"
-                + "1. Use arrow keys to move the snake (Up, Down, Left, Right).\n"
-                + "2. Eat the food to grow and earn points.\n"
-                + "3. Avoid hitting walls or yourself to stay alive.\n"
-                + "4. Your score is displayed on the screen.\n"
-                + "5. Have fun and beat your high score!\n");
+        Text instructions = new Text(
+                "Objective:\n" +
+                        "Eat food to grow. Avoid walls, your tail, and paddles.\n\n" +
+                        "Controls:\n" +
+                        "- Arrow Keys: Move snake.\n\n" +
+                        "Rules:\n" +
+                        "- Eating food grows the snake and scores points.\n" +
+                        "- Game ends by hitting walls, snake's tail, or paddles.\n" +
+                        "- New paddles appear every 50 points; new food every 30 points.\n\n" +
+                        "Tips:\n" +
+                        "- Plan your moves.\n" +
+                        "- Watch for new obstacles.\n\n" +
+                        "Scoring:\n" +
+                        "Points increase with food eaten.\n\n" +
+                        "Pause/Resume:\n" +
+                        "Pause and resume anytime with the 'Pause' button."
+        );
+
 
         // Optionally, style the instructions or add more components as needed
         instructions.getStyleClass().add("help-text");
@@ -195,7 +207,7 @@ public class GameFrameFX {
         layout.setAlignment(Pos.CENTER);
 
         // Create scene and set the stage
-        Scene scene = new Scene(layout, 400, 300); // Adjust size as needed
+        Scene scene = new Scene(layout, 500, 400); // Adjust size as needed
         helpStage.setScene(scene);
 
         helpStage.show(); // Display the help window
