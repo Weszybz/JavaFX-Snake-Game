@@ -1,11 +1,8 @@
-package view;
+package controller;
 
-import controller.GameScreenFX;
-import controller.Leaderboard;
-import controller.Settings;
+import view.Leaderboard;
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -36,7 +33,7 @@ import model.Paddle;
  * Main class for the snake game application.
  * Sets up the stage and scene for the game, handles user interactions, and controls the game states.
  */
-public class GameSnake extends Application {
+public class GameSnakeFX extends Application {
 	private static final int WIDTH = 870;
 	private static final int HEIGHT = 560;
 	private model.Snake snake;
@@ -61,7 +58,7 @@ public class GameSnake extends Application {
 	Image pauseImage = new Image(getClass().getResource("/pause.png").toExternalForm());
 	ImageView pauseView = new ImageView(pauseImage);
 
-	public GameSnake(String playerName) {
+	public GameSnakeFX(String playerName) {
 		this.playerName = playerName; // Initialize player name
 	}
 
@@ -316,7 +313,7 @@ public class GameSnake extends Application {
 		/**
 		 * Starts music when the game starts
 		 */
-		String musicFile = "src/main/resources/frogger.mp3";
+		String musicFile = "AgbongiasedeWesley_Source_Code/src/main/resources/frogger.mp3";
 		Media sound = new Media(new File(musicFile).toURI().toString());
 		mediaPlayer = new MediaPlayer(sound);
 		mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // loop indefinitely

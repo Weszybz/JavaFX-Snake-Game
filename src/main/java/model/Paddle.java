@@ -11,7 +11,6 @@ import java.awt.*;
 public class Paddle {
 
     // Constants for the paddle
-    public static final Color BORDER_COLOR = Color.GREEN.darker().darker();
     public static final Color INNER_COLOR = Color.GREEN;
     public static final int DEFAULT_MOVE_AMOUNT = 3;
 
@@ -21,7 +20,6 @@ public class Paddle {
     private int moveAmount;       // How much the paddle should move per action
     private double min; // minimum x-coordinate of the paddle's movement
     private double max; // maximum x-coordinate of the paddle's movement
-    private boolean isAvailable;  // Is the paddle active
 
     // Constructor
     public Paddle(int width, int height, double gameWidth) {
@@ -66,26 +64,6 @@ public class Paddle {
         paddleFace.setY(ballPoint.getY());
     }
 
-    // Start moving the paddle left
-    public void moveLeft() {
-        moveAmount = -DEFAULT_MOVE_AMOUNT;
-    }
-
-    // Start moving the paddle right
-    public void moveRight() {
-        moveAmount = DEFAULT_MOVE_AMOUNT;
-    }
-
-    // Stop moving the paddle
-    public void stop() {
-        moveAmount = 0;
-    }
-
-    // Resume movement with the last known direction
-    public void resume() {
-        // Implement logic to resume movement
-    }
-
     // Draw the paddle on the canvas
     public void draw(GraphicsContext gc) {
         gc.setFill(INNER_COLOR);
@@ -95,14 +73,5 @@ public class Paddle {
     // Getters and Setters
     public Rectangle getPaddleFace() {
         return this.paddleFace;
-    }
-
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
-
-    // Check if the paddle collides with another object like the snake
-    public boolean checkCollision(Rectangle other) {
-        return paddleFace.intersects(other.getBoundsInLocal());
     }
 }
