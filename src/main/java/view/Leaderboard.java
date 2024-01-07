@@ -1,4 +1,4 @@
-package controller;
+package view;
 
 import java.util.*;
 import java.nio.file.*;
@@ -12,7 +12,7 @@ public class Leaderboard implements Comparable<Leaderboard> {
     private String name; // name of the player
     private int score; // score of the player
 
-    private static final String HIGH_SCORE_FILE = "highscores.txt"; // file for high scores
+    private static final String HIGH_SCORE_FILE = "leaderboard.txt"; // file for high scores
     private static List<Leaderboard> highScores = new ArrayList<>(); // list to manage player scores
 
     public Leaderboard(String name, int score) {

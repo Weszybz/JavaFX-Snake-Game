@@ -12,7 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import view.GameSnake;
+import view.Leaderboard;
 
 import java.io.IOException;
 
@@ -139,7 +139,7 @@ public class GameFrameFX {
     @FXML
     private void startGame() { try {
         final String currentName = playerNameInput.getText(); // Copy to a final variable
-        GameSnake game = new GameSnake(currentName); // Pass player name to the game stage
+        GameSnakeFX game = new GameSnakeFX(currentName); // Pass player name to the game stage
         Stage primaryStage = GameScreenFX.getPrimaryStage();
         game.start(primaryStage); // Start the game using the existing stage.
         game.applySelectedBackground(); // Apply the selected background

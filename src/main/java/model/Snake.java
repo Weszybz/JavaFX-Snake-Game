@@ -19,10 +19,6 @@ public class Snake {
     private List<Objects> body;
     private List<Direction> segmentDirections;
     private LinkedList<Point2D> turnPoints = new LinkedList<>();
-
-    private Image headImage;
-    private Image bodyImage;
-    private Image originalHeadImage;
     private Direction currentDirection;
     private Direction previousDirection;
     private final int size;
@@ -30,18 +26,10 @@ public class Snake {
     private long lastMoveTime = 0;
     private int score = 0;
     private boolean gameOver = false;
-
-
     private Image spriteSheet;
-    private Rectangle2D headSprite;
-    private Rectangle2D bodySprite;
-
-    // Define constants for the sprite sheet positions
     private static final int SPRITE_SIZE = 64;  // assuming each sprite is 64x64 pixels
-    private static final Rectangle2D HEAD_SPRITE = new Rectangle2D(SPRITE_SIZE * 4, 0, SPRITE_SIZE, SPRITE_SIZE);
     private static final Rectangle2D BODY_STRAIGHT_SPRITE = new Rectangle2D(SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
-    private static final Rectangle2D BODY_TURN_SPRITE = new Rectangle2D(SPRITE_SIZE * 2, 0, SPRITE_SIZE, SPRITE_SIZE);
-    private static final Rectangle2D TAIL_SPRITE = new Rectangle2D(SPRITE_SIZE * 4, SPRITE_SIZE * 2, SPRITE_SIZE, SPRITE_SIZE);
+
 
     /**
      * Constructor for Snake.
@@ -62,11 +50,6 @@ public class Snake {
         // Load the sprite sheet
         this.spriteSheet = new Image(spriteSheetPath);
 
-        // Define the individual sprites based on the sprite sheet
-        this.headSprite = new Rectangle2D(0, 0, size, size);
-        this.bodySprite = new Rectangle2D(size, 0, size, size);
-        // ... define other sprites
-
         // Initialize the snake's body
         this.body = new LinkedList<>();
         for (int i = 0; i < initialSize; i++) {
@@ -77,7 +60,6 @@ public class Snake {
         for (int i = 0; i < initialSize; i++) {
             segmentDirections.add(Direction.RIGHT); // Assuming snake initially moves right
         }
-
     }
 
     /**
@@ -85,8 +67,6 @@ public class Snake {
      *
      */
     private Rectangle2D getHeadSprite() {
-        // Use your existing utility to rotate the image based on the direction
-        // Here's a pseudocode example, replace with your actual implementation:
         switch (currentDirection) {
             case UP:
                 return new Rectangle2D(SPRITE_SIZE * 3, 0, SPRITE_SIZE, SPRITE_SIZE);
@@ -102,10 +82,8 @@ public class Snake {
         }
     }
 
-    private Rectangle2D getTailSprite() {
-        // Use your existing utility to rotate the image based on the direction
-        // Here's a pseudocode example, replace with your actual implementation:
-        switch (currentDirection) {
+    private Rectangle2D getTailSprite(Direction direction) {
+        switch (direction) {
             case UP:
                 return new Rectangle2D(SPRITE_SIZE * 3, SPRITE_SIZE * 2, SPRITE_SIZE, SPRITE_SIZE);
             case DOWN:
@@ -119,80 +97,61 @@ public class Snake {
                 return new Rectangle2D(SPRITE_SIZE * 4, SPRITE_SIZE * 2, SPRITE_SIZE, SPRITE_SIZE);
         }
     }
-    private Rectangle2D getBodySprite() {
-        // Use your existing utility to rotate the image based on the direction
-        // Here's a pseudocode example, replace with your actual implementation:
-        switch (currentDirection) {
+    private Rectangle2D getBodySprite(Direction direction) {
+        switch (direction) {
             case UP:
-                return new Rectangle2D(SPRITE_SIZE * 2, SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
             case DOWN:
                 return new Rectangle2D(SPRITE_SIZE * 2, SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
-            case LEFT:
-                return new Rectangle2D(SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
             case RIGHT:
-                // No rotation needed
-                return new Rectangle2D(SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
+            case LEFT:
             default:
                 return new Rectangle2D(SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
         }
     }
 
     private Rectangle2D getTurnSprite(Direction thisSegmentDirection, Direction nextSegmentDirection) {
-        if (thisSegmentDirection == Direction.UP && nextSegmentDirection == Direction.RIGHT) {
-            // Curve turning up to right
+        if ((thisSegmentDirection == Direction.UP && nextSegmentDirection == Direction.RIGHT)|| (thisSegmentDirection == Direction.LEFT && nextSegmentDirection == Direction.DOWN)) {
+            // Curve turning up to right // Curve turning left to down
             return new Rectangle2D(0, 0, SPRITE_SIZE, SPRITE_SIZE);
-        } else if (thisSegmentDirection == Direction.UP && nextSegmentDirection == Direction.LEFT) {
-            // Curve turning up to left
+        } else if ((thisSegmentDirection == Direction.UP && nextSegmentDirection == Direction.LEFT) || (thisSegmentDirection == Direction.RIGHT && nextSegmentDirection == Direction.DOWN)) {
+            // Curve turning up to left // Curve turning right to down
             return new Rectangle2D(SPRITE_SIZE * 2, 0, SPRITE_SIZE, SPRITE_SIZE);
-        } else if (thisSegmentDirection == Direction.LEFT && nextSegmentDirection == Direction.UP) {
-            // Curve turning left to up
-            return new Rectangle2D(SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
-        } else if (thisSegmentDirection == Direction.LEFT && nextSegmentDirection == Direction.DOWN) {
-            // Curve turning left to down
-            return new Rectangle2D(0, 0, SPRITE_SIZE, SPRITE_SIZE);
-        } else if (thisSegmentDirection == Direction.DOWN && nextSegmentDirection == Direction.RIGHT) {
-            // Curve turning down to right
+        } else if ((thisSegmentDirection == Direction.LEFT && nextSegmentDirection == Direction.UP) || (thisSegmentDirection == Direction.DOWN && nextSegmentDirection == Direction.RIGHT)) {
+            // Curve turning left to up // Curve turning down to right
             return new Rectangle2D(0, SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
-        } else if (thisSegmentDirection == Direction.DOWN && nextSegmentDirection == Direction.LEFT) {
-            // Curve turning down to left
+        } else if ((thisSegmentDirection == Direction.DOWN && nextSegmentDirection == Direction.LEFT) ||(thisSegmentDirection == Direction.RIGHT && nextSegmentDirection == Direction.UP) ) {
+            // Curve turning down to left // Curve turning right to up
             return new Rectangle2D(SPRITE_SIZE * 2, SPRITE_SIZE * 2, SPRITE_SIZE, SPRITE_SIZE);
-        } else if (thisSegmentDirection == Direction.RIGHT && nextSegmentDirection == Direction.UP) {
-            // Curve turning right to up
-            return new Rectangle2D(SPRITE_SIZE * 2, SPRITE_SIZE * 2, SPRITE_SIZE, SPRITE_SIZE);
-        } else if (thisSegmentDirection == Direction.RIGHT && nextSegmentDirection == Direction.DOWN) {
-            // Curve turning right to down
-            return new Rectangle2D(SPRITE_SIZE * 2, 0, SPRITE_SIZE, SPRITE_SIZE);
         } else {
             // No turn, use the straight body sprite
             return BODY_STRAIGHT_SPRITE;
         }
     }
 
-
-
     public void draw(GraphicsContext gc) {
         for (int i = 0; i < body.size(); i++) {
             Objects segment = body.get(i);
-
             // Determine the sprite to use
             Rectangle2D spriteToUse;
+
             // Draw the segment using the appropriate sprite
             if (i == 0) {
                 // Head of the snake
                 spriteToUse = getHeadSprite();
             } else if (i == body.size() - 1) {
                 // Tail of the snake
-                spriteToUse = getTailSprite();
+                Direction nextSegmentDirection = segmentDirections.get(i - 1);
+                spriteToUse = getTailSprite(nextSegmentDirection);
             } else {
                 // Body of the snake
                 Direction thisSegmentDirection = segmentDirections.get(i);
-                Direction nextSegmentDirection = segmentDirections.get(i - 1); // Use the direction of the previous segment to determine the turn
+                Direction nextSegmentDirection = segmentDirections.get(i - 1);
                 if (thisSegmentDirection != nextSegmentDirection) {
                     // This segment is a turn
                     spriteToUse = getTurnSprite(thisSegmentDirection, nextSegmentDirection);
                 } else {
                     // This segment is straight
-                    spriteToUse = getBodySprite();
+                    spriteToUse = getBodySprite(nextSegmentDirection);
                 }
             }
 
@@ -311,36 +270,24 @@ public class Snake {
 
     /**
      * Rotates the head image of the snake based on its current direction.
+     *
+     * @return
      */
-    private void rotateHeadImage() {
+    private Rectangle2D rotateHeadImage() {
         // Assuming your sprite sheet has the head images in the order: up, right, down, left
-        double rotationAngle;
         switch (currentDirection) {
             case UP:
-                rotationAngle = 0; // No rotation if the head is already facing up
-                headSprite = new Rectangle2D(0 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
-                break;
+                return new Rectangle2D(0 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
             case RIGHT:
-                rotationAngle = 90; // Rotate clockwise by 90 degrees
-                headSprite = new Rectangle2D(1 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
-                break;
+                return new Rectangle2D(1 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
             case DOWN:
-                rotationAngle = 180; // Rotate by 180 degrees
-                headSprite = new Rectangle2D(2 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
-                break;
+                return new Rectangle2D(2 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
             case LEFT:
-                rotationAngle = 270; // Rotate counter-clockwise by 90 degrees
-                headSprite = new Rectangle2D(3 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
-                break;
+                return new Rectangle2D(3 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
             default:
-                return; // Default case to handle any unexpected direction
+                return new Rectangle2D(1 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
         }
-
-        // If your sprite sheet does not have separate images for each direction,
-        // you can apply a rotation to the headImage using a utility method like so:
-        headImage = util.GameUtil.rotateImage(originalHeadImage, rotationAngle);
     }
-
 
     /**
      * Checks if the snake is colliding with food.
@@ -375,9 +322,6 @@ public class Snake {
 
         return headRect.intersects(paddleRect);
     }
-
-
-
 
     /**
      * Increases the score by a specified increment (10).
