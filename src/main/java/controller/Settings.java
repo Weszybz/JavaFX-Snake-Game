@@ -3,8 +3,10 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -14,7 +16,8 @@ import java.util.List;
  * Manages user interactions with the settings, such as background and speed selection.
  */
 public class Settings {
-
+    @FXML
+    private BorderPane rootPane;
     // Scene Buttons
     @FXML
     private ImageView backgroundImage;
@@ -25,18 +28,13 @@ public class Settings {
     @FXML
     private Button backButton;
     @FXML
-    private Button selectButton;
-    @FXML
     private Label chooseBackgroundTitle;
-
     @FXML
     private Label speedLabel;
     @FXML
-    private Button leftSpeedArrowButton;
+    private Slider speedSlider;
     @FXML
-    private Button rightSpeedArrowButton;
-    @FXML
-    private Button selectSpeedButton;
+    private Button confirmButton;
 
     private static int selectedSpeedLevel = 1; // Default speed that the game will be played in
     private static String selectedBackgroundPath = "/UI-background.png";
@@ -68,25 +66,75 @@ public class Settings {
         speedLabel.setText("Speed: " + selectedSpeedLevel); // Display selected speed
     }
 
+    @FXML
+    private void handleConfirmAction() {
+        // Handle the background selection
+        selectBackground();
+
+        // Handle the speed selection
+        selectSpeedLevel();
+
+        // Code to close the settings window or transition to the main menu
+        goBackToMainMenu(); // or another appropriate method
+    }
+
     // Initializes the controller and manages the event handler
     @FXML
     public void initialize() {
         chooseBackgroundTitle.setText("Choose Background");
         chooseBackgroundTitle.getStyleClass().add("background-title");
 
+        Image backImage = new Image(getClass().getResource("/back.png").toExternalForm());
+        ImageView backImageView = new ImageView(backImage);
+
+        Image leftImage = new Image(getClass().getResource("/chevron-left.png").toExternalForm());
+        ImageView leftImageView = new ImageView(leftImage);
+
+        Image rightImage = new Image(getClass().getResource("/chevron-right.png").toExternalForm());
+        ImageView rightImageView = new ImageView(rightImage);
+
+        // Sets background image
+        Image backgroundImage = new Image(getClass().getResource("/UI-background.png").toExternalForm());
+        BackgroundImage bgImage = new BackgroundImage(backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
+
+        // Set the background on the root pane
+        rootPane.setBackground(new Background(bgImage));
+
         updateBackground();
         updateSpeedLevelDisplay();
 
         // Background selection handlers
         leftArrowButton.setOnAction(event -> navigateBackgrounds(-1));
+        leftArrowButton.setGraphic(leftImageView);
         rightArrowButton.setOnAction(event -> navigateBackgrounds(1));
-        selectButton.setOnAction(event -> selectBackground());
+        rightArrowButton.setGraphic(rightImageView);
         backButton.setOnAction(event -> goBackToMainMenu());
+        backButton.setGraphic(backImageView);
 
-        // Speed selection handlers
-        leftSpeedArrowButton.setOnAction(event -> navigateSpeedLevels(-1));
-        rightSpeedArrowButton.setOnAction(event -> navigateSpeedLevels(1));
-        selectSpeedButton.setOnAction(event -> selectSpeedLevel());
+
+        // Initialize the slider
+        speedSlider.setMin(1);
+        speedSlider.setMax(speedLevels.size()); // Assuming speedLevels is a List<Integer>
+        speedSlider.setValue(currentSpeedIndex);
+        speedSlider.setMajorTickUnit(1);
+        speedSlider.setSnapToTicks(true); // Makes the slider snap to the nearest tick
+        speedSlider.setShowTickMarks(true);
+        speedSlider.setShowTickLabels(true);
+
+        // Update the speed label and selected speed whenever the slider value changes
+        speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            // Round the double value to the nearest integer
+            currentSpeedIndex = (int) Math.round(newValue.doubleValue()) - 1;
+            updateSpeedLevelDisplay(); // Update the display label
+            selectSpeedLevel(); // Update the selected speed level
+        });
+
+        confirmButton.setOnAction(event -> handleConfirmAction());
+
     }
 
     // Navigate through the backgrounds
@@ -119,9 +167,9 @@ public class Settings {
         try {
             Image image = new Image(imageUrl.toExternalForm());
             backgroundImage.setImage(image);
-            System.out.println("Loaded image: " + imagePath); // Debugging
+            //System.out.println("Loaded image: " + imagePath); // Debugging
         } catch (Exception e) {
-            System.out.println("Failed to load image: " + imagePath); // Debugging
+            //System.out.println("Failed to load image: " + imagePath); // Debugging
             e.printStackTrace();
         }
     }
