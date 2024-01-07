@@ -260,15 +260,16 @@ public class GameSnake extends Application {
 		 */
 		// Initialize  snake and food
 		int speedLevel = Settings.getSelectedSpeedLevel();
-		long speed;// = 100_000_000;
-		switch (speedLevel) {
-			case 2: speed = 50_000_000; break;
-			case 3: speed = 25_000_000; break;
-			case 1:
-			default: speed =100_000_000; break;
-		}
+		long speed = determineSpeedBasedOnLevel(speedLevel);
 
-		snake = new model.Snake("snake-head-right", "snake-body", 5, 5, 3, 20, speed);
+		// Initialize the snake with the sprite sheet path
+		String spriteSheetPath = "/snake-graphics.png"; // The path to your sprite sheet
+		int initialX = 5; // Initial X position of the snake
+		int initialY = 5; // Initial Y position of the snake
+		int initialSize = 3; // Initial size of the snake
+		int segmentSize = 20; // Size of each segment of the snak
+
+		snake = new model.Snake(spriteSheetPath, initialX, initialY, initialSize, segmentSize, speed);
 
 		List<String> foodImageKeys = Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16");
 		food = new model.Food(foodImageKeys); // Initialize food with multiple images
@@ -284,8 +285,15 @@ public class GameSnake extends Application {
 		levels = new Levels(foodImageKeys);
 		levels.addInitialElements(paddle, food);
 
+	}
 
-
+	private long determineSpeedBasedOnLevel(int level) {
+		switch (level) {
+			case 2: return 50_000_000;
+			case 3: return 25_000_000;
+			case 1:
+			default: return 100_000_000;
+		}
 	}
 
 	private void togglePause() {
@@ -401,6 +409,7 @@ public class GameSnake extends Application {
 					break;
 			}
 		});
+
 	}
 
 	/**
