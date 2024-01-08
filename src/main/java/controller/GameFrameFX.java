@@ -17,15 +17,14 @@ import view.Leaderboard;
 import java.io.IOException;
 
 /**
- * The controller class for the main game menu.
- * This class handles the initialization of the main menu, sets up action buttons,
- * and manages the main menu background image.
+ * @Project Launch MainMenu and Game
+ * @Description The controller for the main game menu. Manages interactions, initializes components, and handles navigation between game parts.
+ * @Author Wesley Agbongiasede - modified
+ * @version 1.0
  */
 public class GameFrameFX {
     @FXML
     private BorderPane rootPane; // root pane background image.
-    @FXML
-    private StackPane layout; // root pane background image.
     @FXML
     private Button startGameButton;
     @FXML
@@ -40,13 +39,19 @@ public class GameFrameFX {
     private TextField playerNameInput;
     private Stage stage; // primary stage
 
+    /**
+     * Sets the main stage of the application.
+     *
+     * @param stage The main stage of the application.
+     */
     public void setMainStage(Stage stage) {
         this.stage = stage;
     }
+
     /**
-     * Initialises controller class.
-     * Sets up action buttons.
-     * Sets up main menu background image.
+     * Initializes the controller class. This method is automatically called
+     * after the FXML file has been loaded. It sets up action handlers for menu buttons
+     * and initializes the background and other UI components of the main menu.
      */
     public void initialize() {
         startGameButton.setOnAction(event -> startGame());
@@ -80,8 +85,8 @@ public class GameFrameFX {
     }
     @FXML
     /**
-     * Displays leaderboard on new stage
-     * Applies CSS styling
+     * Displays the leaderboard in a new stage.
+     * The leaderboard shows high scores and player rankings.
      */
     private void showLeaderboard() {
         //New stage made for leaderboard
@@ -131,10 +136,9 @@ public class GameFrameFX {
         leaderboardStage.setScene(scene);
         leaderboardStage.show(); // Display the leaderboard
     }
-
     /**
-     * Starts the game by initialising and showing primary stage.
-     * Catches and handles any exceptions that occur during game start.
+     * Starts the game by initializing the game stage and setting up necessary configurations.
+     * Reads the player's name and passes it to the game stage.
      */
     @FXML
     private void startGame() { try {
@@ -148,9 +152,8 @@ public class GameFrameFX {
     }
     }
     /**
-     * Shows the options screen.
-     * Loads options FXML, sets it on the current stage.
-     * Catches and handles IOExceptions.
+     * Displays the options screen for the game. Allows players to adjust settings like
+     * difficulty and sound. Loads the options FXML file and sets it on the current stage.
      */
     @FXML
     private void showOptions() {
@@ -172,7 +175,10 @@ public class GameFrameFX {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Displays help information in a new stage. Includes game rules,
+     * controls, and objectives to assist players in understanding how to play the game.
+     */
     @FXML
     private void showHelp() {
         Stage helpStage = new Stage();
@@ -213,8 +219,8 @@ public class GameFrameFX {
         helpStage.show(); // Display the help window
     }
     /**
-     * Exits the game application.
-     * Closes the primary stage.
+     * Closes the game application. Ensures a graceful shutdown of the application
+     * by closing the primary stage.
      */
     @FXML
     private void exitGame() {
