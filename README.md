@@ -23,7 +23,7 @@ The Classic Snake Game is a modern remake of the traditional snake game where pl
    - Select background image and speed in settings.
    - Enter your name to record your score 
    - Click on the 'Start' button from the main menu.
-![Gameplay Screenshot 1](/src/main/resources/ReadMEimg1.png)
+![Gameplay Screenshot 1](/AgbongiasedeWesley_Source_Code/src/main/resources/ReadMEimg1.png)
 
 2. **Playing the Game:**
    - Use arrow keys (↑, ↓, ←, →) to change the direction of the snake.
@@ -31,7 +31,7 @@ The Classic Snake Game is a modern remake of the traditional snake game where pl
    - Number of food increases ever 30 scores.
    - Number of paddles increases every 50 scores.
    - Avoid hitting the walls or the snake's own body.
-![Gameplay Screenshot 2](/src/main/resources/ReadMEimg2.png)
+![Gameplay Screenshot 2](/AgbongiasedeWesley_Source_Code/src/main/resources/ReadMEimg2.png)
 
 3. **Ending the Game:**
    - The game ends when the snake collides with itself or the wall.
