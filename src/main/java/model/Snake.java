@@ -11,14 +11,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * The Snake class represents the snake in the game.
- * It is responsible for managing the snake's movement, growth, and collision detection.
+ * @Project Snake Game
+ * @Description The Snake class represents the snake in the game. It is responsible for managing the snake's movement, growth, and collision detection.
+ * @Author Wesley Agbongiasede - modified
+ * @version 1.0
  */
 public class Snake {
-
-    private List<Objects> body;
-    private List<Direction> segmentDirections;
-    private LinkedList<Point2D> turnPoints = new LinkedList<>();
+    private final List<Objects> body;
+    private final List<Direction> segmentDirections;
+    private final LinkedList<Point2D> turnPoints = new LinkedList<>();
     private Direction currentDirection;
     private Direction previousDirection;
     private final int size;
@@ -26,20 +27,20 @@ public class Snake {
     private long lastMoveTime = 0;
     private int score = 0;
     private boolean gameOver = false;
-    private Image spriteSheet;
+    private final Image spriteSheet;
     private static final int SPRITE_SIZE = 64;  // assuming each sprite is 64x64 pixels
     private static final Rectangle2D BODY_STRAIGHT_SPRITE = new Rectangle2D(SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
 
 
     /**
-     * Constructor for Snake.
-     * Initializes the snake with the provided parameters.
+     * Constructor for Snake. Initializes the snake with the provided parameters.
      *
-     * @param initialX            Initial X-coordinate of the snake.
-     * @param initialY            Initial Y-coordinate of the snake.
-     * @param initialSize         Initial size of the snake.
-     * @param segmentSize         Size of each snake segment.
-     * @param speed               Movement speed of the snake.
+     * @param spriteSheetPath Path to the sprite sheet image.
+     * @param initialX        Initial X-coordinate of the snake.
+     * @param initialY        Initial Y-coordinate of the snake.
+     * @param initialSize     Initial size of the snake.
+     * @param segmentSize     Size of each snake segment.
+     * @param speed           Movement speed of the snake.
      */
     public Snake(String spriteSheetPath, int initialX, int initialY, int initialSize, int segmentSize, long speed) {
         this.size = segmentSize;
@@ -63,8 +64,9 @@ public class Snake {
     }
 
     /**
-     * Draws the snake on the game canvas.
+     * Returns the sprite representing the head of the snake based on the current direction.
      *
+     * @return The sprite representing the head of the snake.
      */
     private Rectangle2D getHeadSprite() {
         switch (currentDirection) {
@@ -82,6 +84,12 @@ public class Snake {
         }
     }
 
+    /**
+     * Returns the sprite representing the tail of the snake based on the given direction.
+     *
+     * @param direction The direction of the next segment from the tail.
+     * @return The sprite representing the tail of the snake.
+     */
     private Rectangle2D getTailSprite(Direction direction) {
         switch (direction) {
             case UP:
@@ -97,6 +105,13 @@ public class Snake {
                 return new Rectangle2D(SPRITE_SIZE * 4, SPRITE_SIZE * 2, SPRITE_SIZE, SPRITE_SIZE);
         }
     }
+
+    /**
+     * Returns the sprite representing a segment of the snake's body based on the given direction.
+     *
+     * @param direction The direction of the segment.
+     * @return The sprite representing the segment of the snake's body.
+     */
     private Rectangle2D getBodySprite(Direction direction) {
         switch (direction) {
             case UP:
@@ -109,6 +124,13 @@ public class Snake {
         }
     }
 
+    /**
+     * Returns the sprite representing a segment of the snake's body when there is a turn in direction between this segment and the next segment.
+     *
+     * @param thisSegmentDirection The direction of this segment.
+     * @param nextSegmentDirection The direction of the next segment.
+     * @return The sprite representing the segment of the snake's body for a turn.
+     */
     private Rectangle2D getTurnSprite(Direction thisSegmentDirection, Direction nextSegmentDirection) {
         if ((thisSegmentDirection == Direction.UP && nextSegmentDirection == Direction.RIGHT)|| (thisSegmentDirection == Direction.LEFT && nextSegmentDirection == Direction.DOWN)) {
             // Curve turning up to right // Curve turning left to down
@@ -128,6 +150,11 @@ public class Snake {
         }
     }
 
+    /**
+     * Draws the snake on the provided GraphicsContext.
+     *
+     * @param gc The GraphicsContext on which to draw the snake.
+     */
     public void draw(GraphicsContext gc) {
         for (int i = 0; i < body.size(); i++) {
             Objects segment = body.get(i);
@@ -166,16 +193,13 @@ public class Snake {
         }
     }
 
-
-
-
-
-
     /**
-     * Moves the snake based on the current time and the snake's speed.
-     * Checks for collision with its own body, and if detected, sets the game over flag.
+     * Move the snake's head to a new position based on the current direction.
+     * If the current time minus the last move time is greater than or equal to the speed,
+     * update the snake's position and check for collisions with the body.
+     * If a collision occurs, set the game over flag to true.
      *
-     * @param currentTime Current game time.
+     * @param currentTime The current time in milliseconds.
      */
     public void move(long currentTime) {
         if (currentTime - lastMoveTime >= speed) {
@@ -189,7 +213,7 @@ public class Snake {
                 case RIGHT: newHead.setX(head.getX() + 1); break;
             }
 
-            // Check if the new head position collides with any body segment
+            // Check if the new head position collides with body
             for (int i = 0; i < body.size(); i++) {
                 if (newHead.equals(body.get(i))) {
                     gameOver = true;
@@ -217,11 +241,12 @@ public class Snake {
         }
     }
 
-
     /**
-     * Checks if the snake is out of bounds.
+     * Checks if the head of the snake is out of bounds.
+     * The head is considered out of bounds if its x-coordinate is less than 0 or greater than or equal to the width of the game divided by the cell size,
+     * or if its y-coordinate is less than 0 or greater than or equal to the height of the game divided by the cell size.
      *
-     * @return true if snake is out of bounds, false otherwise.
+     * @return true if the head is out of bounds, false otherwise.
      */
     public boolean isOutOfBounds() {
         Objects head = body.get(0);
@@ -240,7 +265,8 @@ public class Snake {
     }
 
     /**
-     * Increases the size of the snake by adding a new segment at its tail.
+     * Adds a new segment to the snake's body and updates the segment directions.
+     * The new segment is placed at the position of the current tail and continues in the same direction as the last segment.
      */
     public void grow() {
         Objects tail = body.get(body.size() - 1);
@@ -254,9 +280,9 @@ public class Snake {
     }
 
     /**
-     * Changes the direction of the snake's movement.
+     * Changes the direction of the snake.
      *
-     * @param newDirection The new direction for the snake.
+     * @param newDirection The new direction to change to.
      */
     public void changeDirection(Direction newDirection) {
         if ((currentDirection == Direction.UP && newDirection != Direction.DOWN) ||
@@ -270,36 +296,43 @@ public class Snake {
 
     /**
      * Rotates the head image of the snake based on its current direction.
+     * The head image is selected from a sprite sheet, with each direction having its own image.
      *
-     * @return
+     * @return The rectangle representing the rotated head image of the snake.
      */
     private Rectangle2D rotateHeadImage() {
         // Assuming your sprite sheet has the head images in the order: up, right, down, left
         switch (currentDirection) {
             case UP:
-                return new Rectangle2D(0 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
+                return new Rectangle2D(0, 0, SPRITE_SIZE, SPRITE_SIZE);
             case RIGHT:
-                return new Rectangle2D(1 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
+                return new Rectangle2D(SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
             case DOWN:
                 return new Rectangle2D(2 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
             case LEFT:
                 return new Rectangle2D(3 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
             default:
-                return new Rectangle2D(1 * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
+                return new Rectangle2D(SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE);
         }
     }
 
     /**
-     * Checks if the snake is colliding with food.
+     * Checks if the snake's head is colliding with the given food.
      *
-     * @param food The food object to check collision against.
-     * @return true if colliding with food, false otherwise.
+     * @param food The food object to check collision with.
+     * @return true if the head of the snake is colliding with the food, false otherwise.
      */
     public boolean isCollidingWithFood(model.Food food) {
         Objects head = body.get(0);
         return head.getX() == food.getX() && head.getY() == food.getY();
     }
 
+    /**
+     * Checks if the head of the snake is colliding with the paddle.
+     *
+     * @param paddle The paddle object to check collision with.
+     * @return true if the head of the snake is colliding with the paddle, false otherwise.
+     */
     public boolean checkCollisionWithPaddle(Paddle paddle) {
         Objects head = body.get(0); // Assuming this gives you the head of the snake
         Rectangle2D headRect = new Rectangle2D(
@@ -324,7 +357,7 @@ public class Snake {
     }
 
     /**
-     * Increases the score by a specified increment (10).
+     * Increases the score of the snake by the specified amount.
      *
      * @param increment The amount by which to increase the score.
      */
@@ -333,9 +366,9 @@ public class Snake {
     }
 
     /**
-     * Gets the current score.
+     * Returns the current score of the snake.
      *
-     * @return The current score.
+     * @return The score of the snake.
      */
     public int getScore() {
         return score;

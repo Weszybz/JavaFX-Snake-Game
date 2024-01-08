@@ -1,8 +1,10 @@
 package model;
 
 /**
- * The Objects class represents objects in the game with x and y coordinates.
- * These objects can be used to represent points or positions in a two-dimensional space.
+ * @Project Objects
+ * @Description Represents generic objects in the game with x and y coordinates. Provides basic functionalities like setting and getting coordinates, and comparing object positions.
+ * @Author Wesley Agbongiasede
+ * @version 1.0
  */
 public class Objects {
 
@@ -19,8 +21,6 @@ public class Objects {
         this.x = x;
         this.y = y;
     }
-
-    // Getters and setters
 
     /**
      * Gets the x coordinate of the object.
@@ -59,12 +59,11 @@ public class Objects {
     }
 
     /**
-     * Compares this object to the specified object for equality.
-     * The result is true if and only if the argument is not null and is an Objects instance
-     * with the same x and y coordinates.
+     * Compares this Objects instance with the specified Object for equality.
+     * Returns true if the Object is an instance of Objects class, and both the x and y coordinates match; false otherwise.
      *
-     * @param obj The object to compare this Objects against.
-     * @return true if the given object represents an equivalent Objects instance, false otherwise.
+     * @param obj The Object to compare with this Objects instance.
+     * @return true if the objects are equal (same x and y coordinates), false otherwise.
      */
     @Override
     public boolean equals(Object obj) {
@@ -76,10 +75,10 @@ public class Objects {
     }
 
     /**
-     * Returns a hash code value for the object.
-     * This method is supported for the benefit of hash tables.
+     * Calculates the hash code value for this Objects instance.
+     * The hash code is calculated based on the x and y coordinates of the object.
      *
-     * @return A hash code value for this Objects instance.
+     * @return The hash code value for this Objects instance.
      */
     @Override
     public int hashCode() {

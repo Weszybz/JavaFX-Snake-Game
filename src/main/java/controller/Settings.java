@@ -7,13 +7,15 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+
 /**
- * Controller class for the settings screen.
- * Manages user interactions with the settings, such as background and speed selection.
+ * @Project Settings
+ * @Description Controller class for the settings screen. Manages user interactions with the settings, such as background and speed selection.
+ * @Author Wesley Agbongiasede
+ * @version 1.0
  */
 public class Settings {
     @FXML
@@ -35,50 +37,68 @@ public class Settings {
     private Slider speedSlider;
     @FXML
     private Button confirmButton;
-
     private static int selectedSpeedLevel = 1; // Default speed that the game will be played in
     private static String selectedBackgroundPath = "/UI-background.png";
     private int currentSpeedIndex = 0; // Tracks the speed level
     private int currentBackgroundIndex = 0; // Tracks the background
+    private final List<String> backgroundImages = Arrays.asList("/UI-background.png", "/UI-background2.png", "/UI-background3.png");
+    private final List<Integer> speedLevels = Arrays.asList(1, 2, 3); // Speed levels
 
-    private List<String> backgroundImages = Arrays.asList("/UI-background.png", "/UI-background2.png", "/UI-background3.png");
-    private List<Integer> speedLevels = Arrays.asList(1, 2, 3); // Speed levels
-
-    // Getters for speed and background
+    /**
+     * Retrieves the selected speed level from the settings.
+     *
+     * @return The selected speed level.
+     */
     public static int getSelectedSpeedLevel() {
         return selectedSpeedLevel;
     }
 
+    /**
+     * Retrieves the selected background path from the settings.
+     *
+     * @return The selected background path.
+     */
     public static String getSelectedBackgroundPath() {
         return selectedBackgroundPath;
     }
 
-    // Selects the current background based on the user's choice
+    /**
+     * Updates the selectedBackgroundPath with the path of the selected background image.
+     */
     @FXML
     private void selectBackground() {
         selectedBackgroundPath = backgroundImages.get(currentBackgroundIndex);
     }
 
-    // Selects the current speed level based on the user's choice
+    /**
+     * Selects a speed level from the available speed levels.
+     * This method updates the selectedSpeedLevel field with the selected speed level
+     * and displays the selected speed level on the speedLabel.
+     */
     @FXML
     private void selectSpeedLevel() {
         selectedSpeedLevel = speedLevels.get(currentSpeedIndex);
         speedLabel.setText("Speed: " + selectedSpeedLevel); // Display selected speed
     }
 
+    /**
+     * Handles the confirm action in the Settings class.
+     * This method is called when the confirmButton is clicked in the settings window.
+     * It performs the following actions:
+     * 1. Calls the selectBackground method to handle the background selection.
+     * 2. Calls the selectSpeedLevel method to handle the speed selection.
+     * 3. Calls the goBackToMainMenu method to close the settings window or transition to the main menu.
+     */
     @FXML
     private void handleConfirmAction() {
-        // Handle the background selection
         selectBackground();
-
-        // Handle the speed selection
         selectSpeedLevel();
-
-        // Code to close the settings window or transition to the main menu
         goBackToMainMenu(); // or another appropriate method
     }
 
-    // Initializes the controller and manages the event handler
+    /**
+     * Initializes the settings window. This method is called when the settings window is loaded.
+     */
     @FXML
     public void initialize() {
         chooseBackgroundTitle.setText("Choose Background");
@@ -137,24 +157,39 @@ public class Settings {
 
     }
 
-    // Navigate through the backgrounds
+    /**
+     * Navigates through the background images in the settings.
+     *
+     * @param direction the direction to navigate (1 for next background, -1 for previous background)
+     */
     private void navigateBackgrounds(int direction) {
         currentBackgroundIndex = (currentBackgroundIndex + direction + backgroundImages.size()) % backgroundImages.size();
         updateBackground();
     }
 
-    // Navigate through speed levels
+    /**
+     * Navigates through the speed levels.
+     * The speed level index is updated based on the given direction value.
+     *
+     * @param direction the direction to navigate (1 for next speed level, -1 for previous speed level)
+     */
     private void navigateSpeedLevels(int direction) {
         currentSpeedIndex = (currentSpeedIndex + direction + speedLevels.size()) % speedLevels.size();
         updateSpeedLevelDisplay();
     }
 
-    // Updates the speed level display
+    /**
+     * Updates the display of the speed level.
+     * This method sets the text of the speedLabel to the selected speed level.
+     */
     private void updateSpeedLevelDisplay() {
         speedLabel.setText("Speed: " + speedLevels.get(currentSpeedIndex));
     }
 
-    // Updates the background
+    /**
+     * Updates the background image of the settings window.
+     * If the image is not found, a message is printed to the console.
+     */
     private void updateBackground() {
         String imagePath = backgroundImages.get(currentBackgroundIndex);
         URL imageUrl = getClass().getResource(imagePath);
@@ -167,14 +202,14 @@ public class Settings {
         try {
             Image image = new Image(imageUrl.toExternalForm());
             backgroundImage.setImage(image);
-            //System.out.println("Loaded image: " + imagePath); // Debugging
         } catch (Exception e) {
-            //System.out.println("Failed to load image: " + imagePath); // Debugging
             e.printStackTrace();
         }
     }
 
-    // Navigate back to the main menu
+    /**
+     * Navigates back to the main menu by switching the scene to the main menu screen.
+     */
     private void goBackToMainMenu() {
         GameScreenFX.showMainMenu();
     }

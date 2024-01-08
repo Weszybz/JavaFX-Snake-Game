@@ -8,22 +8,29 @@ import javafx.scene.shape.Rectangle;
 
 import java.awt.*;
 
+/**
+ * @Project Paddle
+ * @Description Represents a paddle in the game. Manages the paddle's movement, position, and rendering.
+ * @Author Wesley Agbongiasede - modified
+ * @version 1.0
+ */
 public class Paddle {
-
-    // Constants for the paddle
     public static final Color INNER_COLOR = Color.GREEN;
     public static final int DEFAULT_MOVE_AMOUNT = 3;
+    private final Rectangle paddleFace;
+    private Point2D ballPoint; // Current position of the paddle
+    private int moveAmount; // How much the paddle should move per action
+    private final double min; // minimum x-coordinate of the paddle's movement
+    private final double max; // maximum x-coordinate of the paddle's movement
 
-    // Paddle properties
-    private Rectangle paddleFace; // Now using Rectangle
-    private Point2D ballPoint;    // Current position of the paddle
-    private int moveAmount;       // How much the paddle should move per action
-    private double min; // minimum x-coordinate of the paddle's movement
-    private double max; // maximum x-coordinate of the paddle's movement
-
-    // Constructor
+    /**
+     * Represents a paddle in the game. Manages the paddle's movement, position, and rendering.
+     *
+     * @param width The width of the paddle.
+     * @param height The height of the paddle.
+     * @param gameWidth The width of the game area to constrain the paddle's movement.
+     */
     public Paddle(int width, int height, double gameWidth) {
-        // ... initialization ...
         // Generate a random x-coordinate within the bounds of the container
         int x = (int) (Math.random() * (870 - width + 10));
 
@@ -45,7 +52,10 @@ public class Paddle {
         updatePaddlePosition();
     }
 
-    // Moves the paddle left or right
+    /**
+     * Moves the paddle horizontally within the game area. If the paddle reaches the boundary, it reverses its direction.
+     * The paddle's position is updated after moving.
+     */
     public void move() {
         double newX = ballPoint.getX() + moveAmount;
 
@@ -57,20 +67,31 @@ public class Paddle {
         updatePaddlePosition();
     }
 
-
-    // Update paddle position
+    /**
+     * Updates the position of the paddle based on the current position of the ball.
+     * The X coordinate of the paddle face is set to the X coordinate of the ball minus half of the paddle face width.
+     * The Y coordinate of the paddle face is set to the Y coordinate of the ball.
+     */
     private void updatePaddlePosition() {
         paddleFace.setX(ballPoint.getX() - paddleFace.getWidth() / 2);
         paddleFace.setY(ballPoint.getY());
     }
 
-    // Draw the paddle on the canvas
+    /**
+     * Draws the Paddle on the provided GraphicsContext.
+     *
+     * @param gc The GraphicsContext on which to draw the Paddle.
+     */
     public void draw(GraphicsContext gc) {
         gc.setFill(INNER_COLOR);
         gc.fillRect(paddleFace.getX(), paddleFace.getY(), paddleFace.getWidth(), paddleFace.getHeight());
     }
 
-    // Getters and Setters
+    /**
+     * Retrieves the paddle face rectangle.
+     *
+     * @return The paddle face rectangle.
+     */
     public Rectangle getPaddleFace() {
         return this.paddleFace;
     }
