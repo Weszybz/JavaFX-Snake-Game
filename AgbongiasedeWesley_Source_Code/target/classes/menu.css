@@ -1,0 +1,36 @@
+/* menu.css */
+
+#rootPane {
+    /* Remove the background-color property to avoid overriding the image */
+}
+
+#backgroundImageView {
+    -fx-opacity: 0.8; /* Set image opacity */
+}
+
+#menuContainer {
+    -fx-spacing: 20; /* Set spacing between title and buttons */
+}
+
+#toolbarContainer {
+    -fx-spacing: 20; /* Set spacing between title and buttons */
+}
+
+#titleLabel {
+    -fx-font-size: 36;
+    -fx-font-weight: bold;
+    -fx-fill: #FFFFFF; /* Set text color to white */
+}
+
+.button {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+    -fx-font-size: 18;
+    -fx-text-fill: #CC5DE8
+   /*  -fx-padding: 10 20; */ /* Set padding for buttons */
+}
+
+.button:hover {
+    -fx-background-color: #333333; /* Darker background color on hover */
+}
