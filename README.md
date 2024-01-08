@@ -1,37 +1,47 @@
 # Project Title: Classic Snake Game
 ## Author: Wesley Agbongiasede
 
-### Brief Project Description
-Classic Snake Game is a nostalgic re-creation of the famous mobile game that peaked in popularity during the early 2000s. This version is built using JavaFX, allowing it to run on any machine with a Java Runtime Environment. The player controls a growing snake, guiding it to eat food while avoiding obstacles and the edges of the game area.
+### Brief Project Description:
+The Classic Snake Game is a modern remake of the traditional snake game where players navigate a snake to eat items while avoiding self-collision and wall collisions. With each item consumed, the snake grows longer and the game speeds up, making navigation increasingly difficult. This game is developed using JavaFX, providing a user-friendly interface and smooth gameplay experience.
+
 
 ### How to Install and Run the Project
-1. Ensure Java Runtime Environment (JRE) and JavaFX SDK are installed on your machine.
-2. Download the `.jar` file from the releases section of this repository.
-3. Run the game using the command: `java -jar ClassicSnakeGame.jar` in your terminal.
+1. **Prerequisite Installation:**
+   - Ensure Java (JDK) and JavaFX are installed on your computer.
+   - Install a Java IDE like IntelliJ IDEA.
+
+2. **Download and Open Project:**
+   - Download the source code.
+   - Extract zipped file and open the project in your Java IDE.
+
+3. **Running the Project:**
+   - Navigate to the main class file (`App.java`). Can be found in the controller package.
+   - Run the file using your IDE's run feature. The game should start in a new window.
 
 ### How to Use the Project (i.e., How to Play the Game)
-- Use the arrow keys (↑, ↓, ←, →) to change the direction of the snake.
-- Guide the snake to the food items that appear randomly on the screen.
-- Each food item consumed will increase the score and the length of the snake.
-- Avoid colliding with the walls or the snake's own body.
-- The game ends when the snake hits a wall or itself.
-- Try to score as high as possible before the game over!
+1. **Starting the Game:**
+   - Select background image and speed in settings.
+   - Enter your name to record your score 
+   - Click on the 'Start' button from the main menu.
+![Gameplay Screenshot 1](/src/main/resources/ReadMEimg1.png)
 
-### Credits
-- JavaFX Library: Provides the graphical user interface for the game.
-- [Any other libraries or assets used, like images or sound effects]
-- [Mention any contributors or sources of inspiration for the project]
+2. **Playing the Game:**
+   - Use arrow keys (↑, ↓, ←, →) to change the direction of the snake.
+   - Try to eat as many items as possible to increase your score.
+   - Number of food increases ever 30 scores.
+   - Number of paddles increases every 50 scores.
+   - Avoid hitting the walls or the snake's own body.
+![Gameplay Screenshot 2](/src/main/resources/ReadMEimg2.png)
 
-![Gameplay Screenshot 1](path/to/screenshot1.png)
-![Gameplay Screenshot 2](path/to/screenshot2.png)
-![Gameplay Screenshot 3](path/to/screenshot3.png)
+3. **Ending the Game:**
+   - The game ends when the snake collides with itself or the wall.
+   - Leaderboard will be shown and can be found from the main menu
 
-Thank you for playing the Classic Snake Game!
+### Credits:
+- **Graphics and Sound:**
+  - The Icon images are sourced from https://icons8.com
+  - Background music and sound effects are obtained from https://samplefocus.com/samples/lost-a-life-fx.
+- **JavaFX Library:** For providing a comprehensive set of graphics and media packages to create immersive visual applications.
 
 
-## Class Diagram
-![](/src/main/resources/ClassDiagram1.png)
-Here we have my class diagram based on my understanding of the software.
-## Class Diagram 2
-![](/src/main/resources/ClassDiagram2.png)
-Here we have the generated class diagram.
+Thank you for playing the Snake Game!
