@@ -31,22 +31,22 @@ This project recreates the nostalgic Snake game experience with a clean interfac
 ## 🖼️ Screenshots
 
 ### 🎬 Main Menu
-![Main Menu](sreenshots/homescreen.png)
+![Main Menu](screenshots/homescreen.png)
 
 ---
 
 ### 🐍 Gameplay
-![In-Game Action](sreenshots/gameplay.png)
+![In-Game Action](screenshots/gameplay.png)
 
 ---
 
 ### ⚙️ Settings Screen
-![Settings](sreenshots/settings.png)
+![Settings](screenshots/settings.png)
 
 ---
 
 ### 🏆 Leaderboard + Game Over
-![Leaderboard](sreenshots/leaderboard.png)
+![Leaderboard](screenshots/leaderboard.png)
 
 ---
 
